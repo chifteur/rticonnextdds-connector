@@ -11,22 +11,22 @@ namespace RTI.Connector
     using System.Collections.Generic;
 
     /// <summary>
-    /// Collection of samples read with a <see cref="Reader"/>.
+    /// Collection of samples read with a <see cref="Input"/>.
     /// </summary>
     public class SampleCollection : IEnumerable<Sample>
     {
-        readonly Reader reader;
+        readonly Input input;
 
-        internal SampleCollection(Reader reader)
+        internal SampleCollection(Input input)
         {
-            this.reader = reader;
+            this.input = input;
         }
 
         /// <summary>
         /// Gets the number of samples.
         /// </summary>
         /// <value>The number of samples.</value>
-        public int Count => reader.InternalReader.GetSamplesLength();
+        public int Count => input.InternalInput.GetSamplesLength();
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
@@ -36,7 +36,7 @@ namespace RTI.Connector
         /// </returns>
         public IEnumerator<Sample> GetEnumerator()
         {
-            return new SampleEnumerator(reader, Count);
+            return new SampleEnumerator(input, Count);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -49,13 +49,13 @@ namespace RTI.Connector
         /// </summary>
         sealed class SampleEnumerator : IEnumerator<Sample>
         {
-            readonly Reader reader;
+            readonly Input input;
             readonly int count;
             int index;
 
-            internal SampleEnumerator(Reader reader, int count)
+            internal SampleEnumerator(Input input, int count)
             {
-                this.reader = reader;
+                this.input = input;
                 this.count = count;
             }
 
@@ -63,7 +63,7 @@ namespace RTI.Connector
             /// Gets the current iterating sample.
             /// </summary>
             /// <value>The current sample.</value>
-            public Sample Current => new Sample(reader, index);
+            public Sample Current => new Sample(input, index);
 
             object IEnumerator.Current => Current;
 

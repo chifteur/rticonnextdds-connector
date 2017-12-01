@@ -41,14 +41,14 @@
     <Compile Include="Instance.cs" />
     <Compile Include="Interface\Connector.cs" />
     <Compile Include="Interface\Instance.cs" />
-    <Compile Include="Interface\Reader.cs" />
+    <Compile Include="Interface\Input.cs" />
     <Compile Include="Interface\Sample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reader.cs" />
+    <Compile Include="Input.cs" />
     <Compile Include="Sample.cs" />
     <Compile Include="SampleCollection.cs" />
-    <Compile Include="Writer.cs" />
-    <Compile Include="Interface\Writer.cs" />
+    <Compile Include="Output.cs" />
+    <Compile Include="Interface\Output.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -12,70 +12,70 @@ namespace RTI.Connector.Interface
 
     sealed class Sample
     {
-        readonly Reader reader;
+        readonly Input input;
         readonly int index;
 
-        public Sample(Reader reader, int index)
+        public Sample(Input input, int index)
         {
-            this.reader = reader;
+            this.input = input;
             this.index = index;
         }
 
         public int GetNumberFromSample(string field)
         {
-            if (reader.Connector.Disposed)
+            if (input.Connector.Disposed)
                 throw new ObjectDisposedException(nameof(Connector));
 
             return (int)NativeMethods.RTIDDSConnector_getNumberFromSamples(
-                reader.Connector.Handle,
-                reader.EntityName,
+                input.Connector.Handle,
+                input.EntityName,
                 index,
                 field);
         }
 
         public bool GetBoolFromSample(string field)
         {
-            if (reader.Connector.Disposed)
+            if (input.Connector.Disposed)
                 throw new ObjectDisposedException(nameof(Connector));
 
             return NativeMethods.RTIDDSConnector_getBooleanFromSamples(
-                reader.Connector.Handle,
-                reader.EntityName,
+                input.Connector.Handle,
+                input.EntityName,
                 index,
                 field) != 0;
         }
 
         public string GetStringFromSample(string field)
         {
-            if (reader.Connector.Disposed)
+            if (input.Connector.Disposed)
                 throw new ObjectDisposedException(nameof(Connector));
 
             return NativeMethods.RTIDDSConnector_getStringFromSamples(
-                reader.Connector.Handle,
-                reader.EntityName,
+                input.Connector.Handle,
+                input.EntityName,
                 index,
                 field);
         }
 
         public string GetJsonFromSample()
         {
-            if (reader.Connector.Disposed)
+            if (input.Connector.Disposed)
                 throw new ObjectDisposedException(nameof(Connector));
 
             return NativeMethods.RTIDDSConnector_getJSONSample(
-                reader.Connector.Handle,
-                reader.EntityName,
+                input.Connector.Handle,
+                input.EntityName,
                 index);
         }
 
         public bool GetBoolFromInfo(string field)
         {
-            if (reader.Connector.Disposed)
+            if (input.Connector.Disposed)
                 throw new ObjectDisposedException(nameof(Connector));
 
             return NativeMethods.RTIDDSConnector_getBooleanFromInfos(
-                reader.Connector.Handle,
-                reader.EntityName,
+                input.Connector.Handle,
+                input.EntityName,
                 index,
                 field) != 0;
         }

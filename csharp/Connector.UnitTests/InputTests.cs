@@ -12,7 +12,7 @@ namespace RTI.Connector.UnitTests
     using NUnit.Framework;
 
     [TestFixture]
-    public class ReaderTests
+    public class InputTests
     {
         Connector connector;
 
@@ -32,115 +32,115 @@ namespace RTI.Connector.UnitTests
         public void ConstructorWithNullConnectorThrowsException()
         {
             Assert.Throws<ArgumentNullException>(
-                () => new Reader(null, TestResources.ReaderName));
+                () => new Input(null, TestResources.InputName));
         }
 
         [Test]
         public void ConstructorWithNullOrEmptyEntityNameThrowsException()
         {
             Assert.Throws<ArgumentNullException>(
-                () => new Reader(connector, null));
+                () => new Input(connector, null));
             Assert.Throws<ArgumentNullException>(
-                () => new Reader(connector, string.Empty));
+                () => new Input(connector, string.Empty));
         }
 
         [Test]
         public void ConstructorWithMissingEntityNameThrowsException()
         {
             Assert.Throws<COMException>(
-                () => new Reader(connector, "FakeSubscriber::MySquareReader"));
+                () => new Input(connector, "FakeSubscriber::MySquareReader"));
             Assert.Throws<COMException>(
-                () => new Reader(connector, "MySubscriber::FakeReader"));
+                () => new Input(connector, "MySubscriber::FakeReader"));
         }
 
         [Test]
         public void ConstructorWithValidConfigIsSuccessful()
         {
-            Reader reader = null;
+            Input input = null;
             Assert.DoesNotThrow(
-                () => reader = new Reader(connector, TestResources.ReaderName));
-            Assert.IsNotNull(reader.InternalReader);
+                () => input = new Input(connector, TestResources.InputName));
+            Assert.IsNotNull(input.InternalInput);
         }
 
         [Test]
         public void ConstructorSetsProperties()
         {
-            Reader reader = new Reader(connector, TestResources.ReaderName);
-            Assert.AreEqual(TestResources.ReaderName, reader.Name);
-            Assert.IsNotNull(reader.Samples);
+            Input input = new Input(connector, TestResources.InputName);
+            Assert.AreEqual(TestResources.InputName, input.Name);
+            Assert.IsNotNull(input.Samples);
         }
 
         [Test]
         public void DisposeChangesProperty()
         {
-            Reader reader = new Reader(connector, TestResources.ReaderName);
-            Assert.IsFalse(reader.Disposed);
-            reader.Dispose();
-            Assert.IsTrue(reader.Disposed);
+            Input input = new Input(connector, TestResources.InputName);
+            Assert.IsFalse(input.Disposed);
+            input.Dispose();
+            Assert.IsTrue(input.Disposed);
         }
 
         [Test]
         public void DisposeDoesNotDisposeConnector()
         {
-            Reader reader = new Reader(connector, TestResources.ReaderName);
-            reader.Dispose();
-            Assert.IsTrue(reader.Disposed);
+            Input input = new Input(connector, TestResources.InputName);
+            input.Dispose();
+            Assert.IsTrue(input.Disposed);
             Assert.IsFalse(connector.Disposed);
         }
 
         [Test]
         public void DisposingTwiceDoesNotThrowException()
         {
-            Reader reader = new Reader(connector, TestResources.ReaderName);
-            reader.Dispose();
-            Assert.DoesNotThrow(reader.Dispose);
-            Assert.IsTrue(reader.Disposed);
+            Input input = new Input(connector, TestResources.InputName);
+            input.Dispose();
+            Assert.DoesNotThrow(input.Dispose);
+            Assert.IsTrue(input.Disposed);
         }
 
         [Test]
         public void ReadDoesNotThrowException()
         {
-            Reader reader = new Reader(connector, TestResources.ReaderName);
-            Assert.DoesNotThrow(reader.Read);
+            Input input = new Input(connector, TestResources.InputName);
+            Assert.DoesNotThrow(input.Read);
         }
 
         [Test]
         public void ReadAfterDisposeThrowsException()
         {
-            Reader reader = new Reader(connector, TestResources.ReaderName);
-            reader.Dispose();
-            Assert.Throws<ObjectDisposedException>(reader.Read);
+            Input input = new Input(connector, TestResources.InputName);
+            input.Dispose();
+            Assert.Throws<ObjectDisposedException>(input.Read);
         }
 
         [Test]
         public void ReadAfterDisposingConnectorThrowsException()
         {
-            Reader reader = new Reader(connector, TestResources.ReaderName);
+            Input input = new Input(connector, TestResources.InputName);
             connector.Dispose();
-            Assert.Throws<ObjectDisposedException>(reader.Read);
+            Assert.Throws<ObjectDisposedException>(input.Read);
         }
 
         [Test]
         public void TakeDoesNotThrowException()
         {
-            Reader reader = new Reader(connector, TestResources.ReaderName);
-            Assert.DoesNotThrow(reader.Take);
+            Input input = new Input(connector, TestResources.InputName);
+            Assert.DoesNotThrow(input.Take);
         }
 
         [Test]
         public void TakeAfterDisposeThrowsException()
         {
-            Reader reader = new Reader(connector, TestResources.ReaderName);
-            reader.Dispose();
-            Assert.Throws<ObjectDisposedException>(reader.Take);
+            Input input = new Input(connector, TestResources.InputName);
+            input.Dispose();
+            Assert.Throws<ObjectDisposedException>(input.Take);
         }
 
         [Test]
         public void TakeAfterDisposingConnectorThrowsException()
         {
-            Reader reader = new Reader(connector, TestResources.ReaderName);
+            Input input = new Input(connector, TestResources.InputName);
             connector.Dispose();
-            Assert.Throws<ObjectDisposedException>(reader.Take);
+            Assert.Throws<ObjectDisposedException>(input.Take);
         }
     }
 }

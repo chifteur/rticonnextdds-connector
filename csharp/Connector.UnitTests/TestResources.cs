@@ -23,9 +23,9 @@ namespace RTI.Connector.UnitTests
 
         public static string PubSubConfig => "PartLib::PartPubSub";
 
-        public static string WriterName => "MyPublisher::MySquareWriter";
+        public static string OutputName => "MyPublisher::MySquareWriter";
 
-        public static string ReaderName => "MySubscriber::MySquareReader";
+        public static string InputName => "MySubscriber::MySquareReader";
 
         public static Connector CreatePublisherConnector()
         {

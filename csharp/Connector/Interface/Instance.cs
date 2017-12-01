@@ -12,68 +12,68 @@ namespace RTI.Connector.Interface
 
     sealed class Instance
     {
-        readonly Writer writer;
+        readonly Output output;
 
-        public Instance(Writer writer)
+        public Instance(Output output)
         {
-            this.writer = writer;
+            this.output = output;
         }
 
         public void SetNumber(string field, int val)
         {
-            if (writer.Connector.Disposed)
+            if (output.Connector.Disposed)
                 throw new ObjectDisposedException(nameof(Connector));
 
             NativeMethods.RTIDDSConnector_setNumberIntoSamples(
-                writer.Connector.Handle,
-                writer.EntityName,
+                output.Connector.Handle,
+                output.EntityName,
                 field,
                 val);
         }
 
         public void SetBool(string field, bool val)
         {
-            if (writer.Connector.Disposed)
+            if (output.Connector.Disposed)
                 throw new ObjectDisposedException(nameof(Connector));
 
             NativeMethods.RTIDDSConnector_setBooleanIntoSamples(
-                writer.Connector.Handle,
-                writer.EntityName,
+                output.Connector.Handle,
+                output.EntityName,
                 field,
                 val ? 1 : 0);
         }
 
         public void SetString(string field, string val)
         {
-            if (writer.Connector.Disposed)
+            if (output.Connector.Disposed)
                 throw new ObjectDisposedException(nameof(Connector));
 
             NativeMethods.RTIDDSConnector_setStringIntoSamples(
-                writer.Connector.Handle,
-                writer.EntityName,
+                output.Connector.Handle,
+                output.EntityName,
                 field,
                 val);
         }
 
         public void SetJson(string json)
         {
-            if (writer.Connector.Disposed)
+            if (output.Connector.Disposed)
                 throw new ObjectDisposedException(nameof(Connector));
 
             NativeMethods.RTIDDSConnector_setJSONInstance(
-                writer.Connector.Handle,
-                writer.EntityName,
+                output.Connector.Handle,
+                output.EntityName,
                 json);
         }
 
         public void Clear()
         {
-            if (writer.Connector.Disposed)
+            if (output.Connector.Disposed)
                 throw new ObjectDisposedException(nameof(Connector));
 
             NativeMethods.RTIDDSConnector_clear(
-                writer.Connector.Handle,
-                writer.EntityName);
+                output.Connector.Handle,
+                output.EntityName);
         }
 
         static class NativeMethods

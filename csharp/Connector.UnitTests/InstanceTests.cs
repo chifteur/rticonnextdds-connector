@@ -15,21 +15,21 @@ namespace RTI.Connector.UnitTests
     public class InstanceTests
     {
         Connector connector;
-        Writer writer;
+        Output output;
         Instance instance;
 
         [SetUp]
         public void SetUp()
         {
             connector = TestResources.CreatePublisherConnector();
-            writer = new Writer(connector, TestResources.WriterName);
-            instance = writer.Instance;
+            output = new Output(connector, TestResources.OutputName);
+            instance = output.Instance;
         }
 
         [TearDown]
         public void TearDown()
         {
-            writer.Dispose();
+            output.Dispose();
             connector.Dispose();
         }
 
@@ -136,7 +136,7 @@ namespace RTI.Connector.UnitTests
                 hidden = true
             };
             Assert.DoesNotThrow(() => instance.SetFrom(sample));
-            Assert.DoesNotThrow(writer.Write);
+            Assert.DoesNotThrow(output.Write);
         }
 
         [Test]
@@ -148,7 +148,7 @@ namespace RTI.Connector.UnitTests
                 hidden = true
             };
             Assert.DoesNotThrow(() => instance.SetFrom(sample));
-            Assert.DoesNotThrow(writer.Write);
+            Assert.DoesNotThrow(output.Write);
         }
 
         [Test]
@@ -160,7 +160,7 @@ namespace RTI.Connector.UnitTests
                 hidden = true
             };
             Assert.DoesNotThrow(() => instance.SetFrom(sample));
-            Assert.DoesNotThrow(writer.Write);
+            Assert.DoesNotThrow(output.Write);
         }
 
         [Test]
@@ -173,7 +173,7 @@ namespace RTI.Connector.UnitTests
             };
 
             Assert.DoesNotThrow(() => instance.SetFrom(sample));
-            Assert.DoesNotThrow(writer.Write);
+            Assert.DoesNotThrow(output.Write);
         }
 
         [Test]
@@ -184,7 +184,7 @@ namespace RTI.Connector.UnitTests
                 x = 3.3,
             };
             Assert.DoesNotThrow(() => instance.SetFrom(sample));
-            Assert.DoesNotThrow(writer.Write);
+            Assert.DoesNotThrow(output.Write);
         }
 
         [Test]
@@ -195,7 +195,7 @@ namespace RTI.Connector.UnitTests
                 Fake = 3,
             };
             Assert.DoesNotThrow(() => instance.SetFrom(sample));
-            Assert.DoesNotThrow(writer.Write);
+            Assert.DoesNotThrow(output.Write);
         }
     }
 }

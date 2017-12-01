@@ -10,18 +10,18 @@ namespace RTI.Connector
     using System;
 
     /// <summary>
-    /// Connector sample writer.
+    /// Connector output.
     /// </summary>
-    public class Writer : IDisposable
+    public class Output : IDisposable
     {
-        readonly Interface.Writer writer;
+        readonly Interface.Output output;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Writer"/> class.
+        /// Initializes a new instance of the <see cref="Output"/> class.
         /// </summary>
         /// <param name="connector">Parent connector.</param>
         /// <param name="entityName">Entity name.</param>
-        public Writer(Connector connector, string entityName)
+        public Output(Connector connector, string entityName)
         {
             if (connector == null)
                 throw new ArgumentNullException(nameof(connector));
@@ -29,7 +29,7 @@ namespace RTI.Connector
                 throw new ArgumentNullException(nameof(entityName));
 
             Name = entityName;
-            writer = new Interface.Writer(connector.InternalConnector, entityName);
+            output = new Interface.Output(connector.InternalConnector, entityName);
             Instance = new Instance(this);
         }
 
@@ -43,16 +43,16 @@ namespace RTI.Connector
         }
 
         /// <summary>
-        /// Gets the unique instance associated with this writer.
+        /// Gets the unique instance associated with this output.
         /// </summary>
-        /// <value>The writer instance.</value>
+        /// <value>The output instance.</value>
         public Instance Instance {
             get;
             private set;
         }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Writer"/> is disposed.
+        /// Gets a value indicating whether this <see cref="Output"/> is disposed.
         /// </summary>
         /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
         public bool Disposed {
@@ -60,44 +60,26 @@ namespace RTI.Connector
             private set;
         }
 
-        internal Interface.Writer InternalWriter {
-            get { return writer; }
+        internal Interface.Output InternalOutput {
+            get { return output; }
         }
 
         /// <summary>
-        /// Write the writer instance.
+        /// Write the output instance.
         /// </summary>
         public void Write()
         {
             if (Disposed)
-                throw new ObjectDisposedException(nameof(Writer));
+                throw new ObjectDisposedException(nameof(Output));
 
-            writer.Write();
+            output.Write();
         }
 
         /// <summary>
-        /// Write the specified sample.
+        /// Releases all resource used by the <see cref="Output"/> object.
         /// </summary>
         /// <remarks>
-        /// This method cleans the current instance and sets its fields from
-        /// the object in the argument.
-        /// </remarks>
-        /// <param name="sample">Sample to send.</param>
-        public void Write(object sample)
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Writer));
-
-            Instance.Clear();
-            Instance.SetFrom(sample);
-            writer.Write();
-        }
-
-        /// <summary>
-        /// Releases all resource used by the <see cref="Writer"/> object.
-        /// </summary>
-        /// <remarks>
-        /// Calling this method doesn't delete the DataWriter.
+        /// Calling this method doesn't delete the internal DDS DataWriter.
         /// </remarks>
         public void Dispose()
         {
@@ -112,7 +94,7 @@ namespace RTI.Connector
 
             Disposed = true;
             if (freeManagedResources)
-                writer.Dispose();
+                output.Dispose();
         }
     }
 }

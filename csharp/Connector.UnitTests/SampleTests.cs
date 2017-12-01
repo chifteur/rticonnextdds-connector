@@ -20,17 +20,17 @@ namespace RTI.Connector.UnitTests
     public class SampleTests
     {
         Connector connector;
-        Writer writer;
-        Reader reader;
+        Output output;
+        Input input;
         SampleCollection samples;
 
         [SetUp]
         public void SetUp()
         {
             connector = TestResources.CreatePubSubConnector();
-            writer = new Writer(connector, TestResources.WriterName);
-            reader = new Reader(connector, TestResources.ReaderName);
-            samples = reader.Samples;
+            output = new Output(connector, TestResources.OutputName);
+            input = new Input(connector, TestResources.InputName);
+            samples = input.Samples;
 
             // Wait for discovery
             Thread.Sleep(100);
@@ -39,8 +39,8 @@ namespace RTI.Connector.UnitTests
         [TearDown]
         public void TearDown()
         {
-            reader.Dispose();
-            writer.Dispose();
+            input.Dispose();
+            output.Dispose();
             connector.Dispose();
         }
 
@@ -177,7 +177,7 @@ namespace RTI.Connector.UnitTests
         {
             SendAndTakeOrReadStandardSample(true);
             Assert.AreEqual(1, samples.Count);
-            reader.Take();
+            input.Take();
             Assert.AreEqual(0, samples.Count);
         }
 
@@ -186,7 +186,7 @@ namespace RTI.Connector.UnitTests
         {
             SendAndTakeOrReadStandardSample(false);
             Assert.AreEqual(1, samples.Count);
-            reader.Read();
+            input.Read();
             Assert.AreEqual(1, samples.Count);
             Assert.AreEqual(4, samples.First().GetInt("y"));
         }
@@ -196,9 +196,9 @@ namespace RTI.Connector.UnitTests
         {
             SendAndTakeOrReadStandardSample(false);
             Assert.AreEqual(1, samples.Count);
-            reader.Take();
+            input.Take();
             Assert.AreEqual(1, samples.Count);
-            reader.Take();
+            input.Take();
             Assert.AreEqual(0, samples.Count);
         }
 
@@ -389,19 +389,19 @@ namespace RTI.Connector.UnitTests
         [Test]
         public void SetInstanceFieldDoesNotCleanJsonObj()
         {
-            writer.Instance.Set("shapesize", 10);
+            output.Instance.Set("shapesize", 10);
             MyClassType obj = new MyClassType {
                 color = "test",
                 x = 3,
                 hidden = true
             };
-            writer.Instance.SetFrom(obj);
-            writer.Instance.Set("x", 5);
-            writer.Instance.Set("y", 4);
-            writer.Write();
+            output.Instance.SetFrom(obj);
+            output.Instance.Set("x", 5);
+            output.Instance.Set("y", 4);
+            output.Write();
 
             Assert.IsTrue(connector.WaitForSamples(1000));
-            reader.Take();
+            input.Take();
             Sample sample = samples.Single();
 
             Assert.AreEqual("test", sample.Get<string>("color"));
@@ -414,19 +414,19 @@ namespace RTI.Connector.UnitTests
         [Test]
         public void SetJsonObjDoesNotResetInstance()
         {
-            writer.Instance.Set("shapesize", 10);
-            writer.Instance.Set("x", 5);
-            writer.Instance.Set("y", 4);
+            output.Instance.Set("shapesize", 10);
+            output.Instance.Set("x", 5);
+            output.Instance.Set("y", 4);
             MyClassType obj = new MyClassType {
                 color = "test",
                 x = 3,
                 hidden = true
             };
-            writer.Instance.SetFrom(obj);
-            writer.Write();
+            output.Instance.SetFrom(obj);
+            output.Write();
 
             Assert.IsTrue(connector.WaitForSamples(1000));
-            reader.Take();
+            input.Take();
             Sample sample = samples.Single();
 
             Assert.AreEqual("test", sample.Get<string>("color"));
@@ -434,49 +434,6 @@ namespace RTI.Connector.UnitTests
             Assert.AreEqual(true, sample.Get<bool>("hidden"));
             Assert.AreEqual(4, sample.Get<int>("y"));
             Assert.AreEqual(10, sample.Get<int>("shapesize"));
-        }
-
-        [Test]
-        public void SendObjectFromWrite()
-        {
-            MyClassType obj = new MyClassType {
-                color = "test",
-                x = 3,
-                hidden = true
-            };
-
-            writer.Write(obj);
-            Assert.IsTrue(connector.WaitForSamples(1000));
-            reader.Take();
-            Sample sample = samples.Single();
-
-            Assert.AreEqual("test", sample.Get<string>("color"));
-            Assert.AreEqual(3, sample.Get<int>("x"));
-            Assert.AreEqual(true, sample.Get<bool>("hidden"));
-        }
-
-        [Test]
-        public void SendObjectFromWriteCleansDefaultInstance()
-        {
-            writer.Instance.Set("shapesize", 10);
-            writer.Instance.Set("x", 5);
-            writer.Instance.Set("y", 4);
-            MyClassType obj = new MyClassType {
-                color = "test",
-                x = 3,
-                hidden = true
-            };
-
-            writer.Write(obj);
-            Assert.IsTrue(connector.WaitForSamples(1000));
-            reader.Take();
-            Sample sample = samples.Single();
-
-            Assert.AreEqual("test", sample.Get<string>("color"));
-            Assert.AreEqual(3, sample.Get<int>("x"));
-            Assert.AreEqual(true, sample.Get<bool>("hidden"));
-            Assert.AreEqual(0, sample.Get<int>("y"));
-            Assert.AreEqual(0, sample.Get<int>("shapesize"));
         }
 
         // This is just for coverage, all IEnumerable<T> implementations
@@ -490,29 +447,29 @@ namespace RTI.Connector.UnitTests
 
         void SendAndTakeOrReadStandardSample(bool take)
         {
-            writer.Instance.Set("x", 3);
-            writer.Instance.Set("y", 4);
-            writer.Instance.Set("color", "BLUE");
-            writer.Instance.Set("hidden", true);
-            writer.Write();
+            output.Instance.Set("x", 3);
+            output.Instance.Set("y", 4);
+            output.Instance.Set("color", "BLUE");
+            output.Instance.Set("hidden", true);
+            output.Write();
 
             Assert.IsTrue(connector.WaitForSamples(1000));
             if (take)
-                reader.Take();
+                input.Take();
             else
-                reader.Read();
+                input.Read();
         }
 
         void SendAndTakeOrReadObjectSample(object obj, bool take)
         {
-            writer.Instance.SetFrom(obj);
-            writer.Write();
+            output.Instance.SetFrom(obj);
+            output.Write();
 
             Assert.IsTrue(connector.WaitForSamples(1000));
             if (take)
-                reader.Take();
+                input.Take();
             else
-                reader.Read();
+                input.Read();
         }
     }
 }

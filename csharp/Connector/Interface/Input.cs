@@ -10,22 +10,17 @@ namespace RTI.Connector.Interface
     using System;
     using System.Runtime.InteropServices;
 
-    sealed class Writer : IDisposable
+    sealed class Input : IDisposable
     {
-        readonly WriterPtr handle;
+        readonly InputPtr handle;
 
-        public Writer(Connector connector, string entityName)
+        public Input(Connector connector, string entityName)
         {
             Connector = connector;
             EntityName = entityName;
-            handle = new WriterPtr(connector, entityName);
+            handle = new InputPtr(connector, entityName);
             if (handle.IsInvalid)
-                throw new COMException("Error getting writer");
-        }
-
-        ~Writer()
-        {
-            Dispose(false);
+                throw new COMException("Error getting input");
         }
 
         public Connector Connector {
@@ -38,12 +33,27 @@ namespace RTI.Connector.Interface
             private set;
         }
 
-        public void Write()
+        public int GetSamplesLength()
+        {
+            return (int)NativeMethods.RTIDDSConnector_getSamplesLength(
+                Connector.Handle,
+                EntityName);
+        }
+
+        public void Read()
         {
             if (Connector.Disposed)
                 throw new ObjectDisposedException(nameof(Connector));
 
-            NativeMethods.RTIDDSConnector_write(Connector.Handle, EntityName);
+            NativeMethods.RTIDDSConnector_read(Connector.Handle, EntityName);
+        }
+
+        public void Take()
+        {
+            if (Connector.Disposed)
+                throw new ObjectDisposedException(nameof(Connector));
+
+            NativeMethods.RTIDDSConnector_take(Connector.Handle, EntityName);
         }
 
         public void Dispose()
@@ -61,22 +71,32 @@ namespace RTI.Connector.Interface
         static class NativeMethods
         {
             [DllImport("rtiddsconnector", CharSet = CharSet.Ansi)]
-            public static extern IntPtr RTIDDSConnector_getWriter(
+            public static extern IntPtr RTIDDSConnector_getReader(
+                Connector.ConnectorPtr connectorHandle,
+                string entityName);
+            
+            [DllImport("rtiddsconnector", CharSet = CharSet.Ansi)]
+            public static extern void RTIDDSConnector_read(
                 Connector.ConnectorPtr connectorHandle,
                 string entityName);
 
             [DllImport("rtiddsconnector", CharSet = CharSet.Ansi)]
-            public static extern void RTIDDSConnector_write(
+            public static extern void RTIDDSConnector_take(
+                Connector.ConnectorPtr connectorHandle,
+                string entityName);
+
+            [DllImport("rtiddsconnector", CharSet = CharSet.Ansi)]
+            public static extern double RTIDDSConnector_getSamplesLength(
                 Connector.ConnectorPtr connectorHandle,
                 string entityName);
         }
 
-        sealed class WriterPtr : SafeHandle
+        sealed class InputPtr : SafeHandle
         {
-            public WriterPtr(Connector connector, string entityName)
+            public InputPtr(Connector connector, string entityName)
                 : base(IntPtr.Zero, true)
             {
-                handle = NativeMethods.RTIDDSConnector_getWriter(
+                handle = NativeMethods.RTIDDSConnector_getReader(
                     connector.Handle,
                     entityName);
             }

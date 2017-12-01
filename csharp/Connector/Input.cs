@@ -10,18 +10,18 @@ namespace RTI.Connector
     using System;
 
     /// <summary>
-    /// Connector sample reader.
+    /// Connector input.
     /// </summary>
-    public class Reader : IDisposable
+    public class Input : IDisposable
     {
-        readonly Interface.Reader reader;
+        readonly Interface.Input input;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Reader"/> class.
+        /// Initializes a new instance of the <see cref="Input"/> class.
         /// </summary>
         /// <param name="connector">Parent connector.</param>
         /// <param name="entityName">Entity name.</param>
-        public Reader(Connector connector, string entityName)
+        public Input(Connector connector, string entityName)
         {
             if (connector == null)
                 throw new ArgumentNullException(nameof(connector));
@@ -29,7 +29,7 @@ namespace RTI.Connector
                 throw new ArgumentNullException(nameof(entityName));
 
             Name = entityName;
-            reader = new Interface.Reader(
+            input = new Interface.Input(
                 connector.InternalConnector,
                 entityName);
             Samples = new SampleCollection(this);
@@ -45,7 +45,7 @@ namespace RTI.Connector
         }
 
         /// <summary>
-        /// Gets the samples read or taken from this reader.
+        /// Gets the samples read or taken from this input.
         /// </summary>
         /// <value>The samples read or taken.</value>
         public SampleCollection Samples {
@@ -54,7 +54,7 @@ namespace RTI.Connector
         }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Reader"/> is disposed.
+        /// Gets a value indicating whether this <see cref="Input"/> is disposed.
         /// </summary>
         /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
         public bool Disposed {
@@ -62,47 +62,45 @@ namespace RTI.Connector
             private set;
         }
 
-        internal Interface.Reader InternalReader {
-            get { return reader; }
+        internal Interface.Input InternalInput {
+            get { return input; }
         }
 
         /// <summary>
-        /// Reads samples with this reader and do not remove them from the
+        /// Reads samples with this input and do not remove them from the
         /// internal queue.
         /// </summary>
         /// <remarks>
-        /// The samples are accessible from the
-        /// <see cref="Samples"/> property. 
+        /// The samples are accessible from the <see cref="Samples"/> property. 
         /// </remarks>
         public void Read()
         {
             if (Disposed)
-                throw new ObjectDisposedException(nameof(Reader));
+                throw new ObjectDisposedException(nameof(Input));
 
-            reader.Read();
+            input.Read();
         }
 
         /// <summary>
-        /// Reads samples with this reader and remove them from the
+        /// Reads samples with this input and remove them from the
         /// internal queue.
         /// </summary>
         /// <remarks>
-        /// The samples are accesible from the
-        /// <see cref="Samples"/> property. 
+        /// The samples are accesible from the <see cref="Samples"/> property. 
         /// </remarks>
         public void Take()
         {
             if (Disposed)
-                throw new ObjectDisposedException(nameof(Reader));
+                throw new ObjectDisposedException(nameof(Input));
 
-            reader.Take();
+            input.Take();
         }
 
         /// <summary>
-        /// Releases all resource used by the <see cref="Reader"/> object.
+        /// Releases all resource used by the <see cref="Input"/> object.
         /// </summary>
         /// <remarks>
-        /// Calling this method doesn't delete the DataWriter.
+        /// Calling this method doesn't delete the internal DDS DataReader.
         /// </remarks>
         public void Dispose()
         {
@@ -117,7 +115,7 @@ namespace RTI.Connector
 
             Disposed = true;
             if (freeManagedResources)
-                reader.Dispose();
+                input.Dispose();
         }
     }
 }

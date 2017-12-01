@@ -10,17 +10,17 @@ namespace RTI.Connector
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Writer instance.
+    /// Output instance.
     /// </summary>
     public class Instance
     {
-        readonly Writer writer;
+        readonly Output output;
         readonly Interface.Instance instance;
 
-        internal Instance(Writer writer)
+        internal Instance(Output output)
         {
-            this.writer = writer;
-            instance = new Interface.Instance(writer.InternalWriter);
+            this.output = output;
+            instance = new Interface.Instance(output.InternalOutput);
         }
 
         /// <summary>

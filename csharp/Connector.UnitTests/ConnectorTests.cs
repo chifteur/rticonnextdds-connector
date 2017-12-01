@@ -121,7 +121,7 @@ namespace RTI.Connector.UnitTests
         }
 
         [Test, Timeout(1000)]
-        public void WaitForSamplesCanTimeOut()
+        public void WaitForSamplesCanDoMsTimeOut()
         {
             using (var connector = TestResources.CreatePublisherConnector()) {
                 Stopwatch watch = Stopwatch.StartNew();
@@ -129,6 +129,18 @@ namespace RTI.Connector.UnitTests
                 watch.Stop();
                 Assert.Less(watch.ElapsedMilliseconds, 110);
                 Assert.Greater(watch.ElapsedMilliseconds, 90);
+            }
+        }
+
+        [Test, Timeout(5000)]
+        public void WaitForSamplesCanDoOneSecTimeOut()
+        {
+            using (var connector = TestResources.CreatePublisherConnector()) {
+                Stopwatch watch = Stopwatch.StartNew();
+                Assert.IsFalse(connector.WaitForSamples(1000));
+                watch.Stop();
+                Assert.Less(watch.ElapsedMilliseconds, 1100);
+                Assert.Greater(watch.ElapsedMilliseconds, 900);
             }
         }
 #endif

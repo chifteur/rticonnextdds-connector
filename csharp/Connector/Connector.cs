@@ -71,7 +71,7 @@ namespace RTI.Connector
         }
 
         /// <summary>
-        /// Waits until any <see cref="Reader"/> receives at least one sample
+        /// Waits until any <see cref="Input"/> receives at least one sample
         /// or the specific time pass.
         /// </summary>
         /// <param name="timeoutMillis">

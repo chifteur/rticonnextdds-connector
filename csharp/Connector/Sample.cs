@@ -12,19 +12,19 @@ namespace RTI.Connector
     using Newtonsoft.Json;
     
     /// <summary>
-    /// Sample read with a <see cref="Reader"/>.
+    /// Sample read with a <see cref="Input"/>.
     /// </summary>
     public class Sample
     {
-        readonly Reader reader;
+        readonly Input input;
         readonly int index;
         readonly Interface.Sample internalSample;
 
-        internal Sample(Reader reader, int index)
+        internal Sample(Input input, int index)
         {
-            this.reader = reader;
+            this.input = input;
             this.index = index;
-            internalSample = new Interface.Sample(reader.InternalReader, index);
+            internalSample = new Interface.Sample(input.InternalInput, index);
         }
 
         /// <summary>
