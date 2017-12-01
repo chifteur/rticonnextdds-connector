@@ -5,20 +5,19 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector.Interface
+namespace RTI.Connext.Connector.Interface
 {
     using System;
     using System.Runtime.InteropServices;
 
     sealed class Connector : IDisposable
     {
-        const int RetCodeTimeOut = 10;
-
         public Connector(string configName, string configFile)
         {
             Handle = new ConnectorPtr(configName, configFile);
-            if (Handle.IsInvalid)
-                throw new COMException("Error creating connector");
+            if (Handle.IsInvalid) {
+                throw new SEHException("Error creating connector");
+            }
         }
 
         ~Connector()
@@ -38,8 +37,14 @@ namespace RTI.Connector.Interface
 
         public bool WaitForSamples(int timeoutMillis)
         {
-            int retcode = NativeMethods.RTIDDSConnector_wait(Handle, timeoutMillis);
-            return retcode != RetCodeTimeOut;
+            ReturnCode retcode = (ReturnCode)NativeMethods.RTIDDSConnector_wait(
+                Handle,
+                timeoutMillis);
+            if (retcode != ReturnCode.Ok && retcode != ReturnCode.Timeout) {
+                throw new SEHException("Invalid retcode: " + retcode.ToString());
+            }
+
+            return retcode != ReturnCode.Timeout;
         }
 
         public void Dispose()
@@ -51,8 +56,9 @@ namespace RTI.Connector.Interface
         void Dispose(bool freeManagedResources)
         {
             Disposed = true;
-            if (freeManagedResources && !Handle.IsInvalid)
+            if (freeManagedResources && !Handle.IsInvalid) {
                 Handle.Dispose();
+            }
         }
 
         internal sealed class ConnectorPtr : SafeHandle

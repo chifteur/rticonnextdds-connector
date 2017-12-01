@@ -5,7 +5,7 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector.Interface
+namespace RTI.Connext.Connector.Interface
 {
     using System;
     using System.Runtime.InteropServices;
@@ -19,8 +19,9 @@ namespace RTI.Connector.Interface
             Connector = connector;
             EntityName = entityName;
             handle = new OutputPtr(connector, entityName);
-            if (handle.IsInvalid)
+            if (handle.IsInvalid) {
                 throw new COMException("Error getting output");
+            }
         }
 
         ~Output()
@@ -40,8 +41,9 @@ namespace RTI.Connector.Interface
 
         public void Write()
         {
-            if (Connector.Disposed)
+            if (Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
+            }
 
             NativeMethods.RTIDDSConnector_write(Connector.Handle, EntityName);
         }
@@ -54,8 +56,9 @@ namespace RTI.Connector.Interface
 
         void Dispose(bool freeManagedResources)
         {
-            if (freeManagedResources && !handle.IsInvalid)
+            if (freeManagedResources && !handle.IsInvalid) {
                 handle.Dispose();
+            }
         }
 
         static class NativeMethods

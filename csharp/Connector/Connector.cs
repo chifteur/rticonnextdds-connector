@@ -5,7 +5,7 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector
+namespace RTI.Connext.Connector
 {
     using System;
 
@@ -23,10 +23,13 @@ namespace RTI.Connector
         /// <param name="configFile">XML configuration file path.</param>
         public Connector(string configName, string configFile)
         {
-            if (string.IsNullOrEmpty(configName))
+            if (string.IsNullOrEmpty(configName)) {
                 throw new ArgumentNullException(nameof(configName));
-            if (string.IsNullOrEmpty(configFile))
+            }
+
+            if (string.IsNullOrEmpty(configFile)) {
                 throw new ArgumentNullException(nameof(configFile));
+            }
 
             ConfigName = configName;
             ConfigFile = configFile;
@@ -71,6 +74,42 @@ namespace RTI.Connector
         }
 
         /// <summary>
+        /// Gets a Connector <see cref="Output"/>.
+        /// </summary>
+        /// <returns>The output.</returns>
+        /// <param name="name">Name of the output.</param>
+        public Output GetOutput(string name)
+        {
+            if (Disposed) {
+                throw new ObjectDisposedException(nameof(Connector));
+            }
+
+            if (string.IsNullOrEmpty(name)) {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return new Output(this, name);
+        }
+
+        /// <summary>
+        /// Gets a Connector <see cref="Input"/>.
+        /// </summary>
+        /// <returns>The input.</returns>
+        /// <param name="name">Name of the input.</param>
+        public Input GetInput(string name)
+        {
+            if (Disposed) {
+                throw new ObjectDisposedException(nameof(Connector));
+            }
+
+            if (string.IsNullOrEmpty(name)) {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return new Input(this, name);
+        }
+
+        /// <summary>
         /// Waits until any <see cref="Input"/> receives at least one sample
         /// or the specific time pass.
         /// </summary>
@@ -82,12 +121,15 @@ namespace RTI.Connector
         /// <c>true</c> if a sample was received;
         /// otherwise if timeout <c>false</c>.
         /// </returns>
-        public bool WaitForSamples(int timeoutMillis)
+        public bool Wait(int timeoutMillis)
         {
-            if (Disposed)
+            if (Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
-            if (timeoutMillis < -1)
+            }
+
+            if (timeoutMillis < -1) {
                 throw new ArgumentOutOfRangeException(nameof(timeoutMillis));
+            }
 
             return InternalConnector.WaitForSamples(timeoutMillis);
         }
@@ -103,12 +145,14 @@ namespace RTI.Connector
 
         protected virtual void Dispose(bool freeManagedResources)
         {
-            if (Disposed)
+            if (Disposed) {
                 return;
+            }
 
             Disposed = true;
-            if (freeManagedResources)
+            if (freeManagedResources) {
                 internalConnector.Dispose();
+            }
         }
     }
 }

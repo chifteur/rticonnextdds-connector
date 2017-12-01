@@ -6,7 +6,7 @@
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
 // namespace RTI.Connector
-namespace RTI.Connector.UnitTests
+namespace RTI.Connext.Connector.UnitTests
 {
     using System.IO;
     using System.Reflection;

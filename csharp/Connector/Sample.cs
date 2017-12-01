@@ -5,7 +5,7 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector
+namespace RTI.Connext.Connector
 {
     using System;
     using System.Globalization;
@@ -75,14 +75,15 @@ namespace RTI.Connector
         public T Get<T>(string field)
         {
             object val;
-            if (typeof(T) == typeof(int))
+            if (typeof(T) == typeof(int)) {
                 val = GetInt(field);
-            else if (typeof(T) == typeof(bool))
+            } else if (typeof(T) == typeof(bool)) {
                 val = GetBool(field);
-            else if (typeof(T) == typeof(string))
+            } else if (typeof(T) == typeof(string)) {
                 val = GetString(field);
-            else
+            } else {
                 throw new FormatException("Unsupported field type");
+            }
 
             return (T)Convert.ChangeType(
                 val,

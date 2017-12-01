@@ -5,7 +5,7 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector.UnitTests
+namespace RTI.Connext.Connector.UnitTests
 {
     using System;
     using System.Runtime.InteropServices;
@@ -29,43 +29,36 @@ namespace RTI.Connector.UnitTests
         }
 
         [Test]
-        public void ConstructorWithNullConnectorThrowsException()
+        public void GetterWithNullOrEmptyEntityNameThrowsException()
         {
             Assert.Throws<ArgumentNullException>(
-                () => new Output(null, TestResources.OutputName));
+                () => connector.GetOutput(null));
+            Assert.Throws<ArgumentNullException>(
+                () => connector.GetOutput(string.Empty));
         }
 
         [Test]
-        public void ConstructorWithNullOrEmptyEntityNameThrowsException()
-        {
-            Assert.Throws<ArgumentNullException>(
-                () => new Output(connector, null));
-            Assert.Throws<ArgumentNullException>(
-                () => new Output(connector, string.Empty));
-        }
-
-        [Test]
-        public void ConstructorWithMissingEntityNameThrowsException()
+        public void GetterWithMissingEntityNameThrowsException()
         {
             Assert.Throws<COMException>(
-                () => new Output(connector, "FakePublisher::MySquareWriter"));
+                () => connector.GetOutput("FakePublisher::MySquareWriter"));
             Assert.Throws<COMException>(
-                () => new Output(connector, "MyPublisher::FakeWriter"));
+                () => connector.GetOutput("MyPublisher::FakeWriter"));
         }
 
         [Test]
-        public void ConstructorWithValidConfigIsSuccessful()
+        public void GetterWithValidConfigIsSuccessful()
         {
             Output output = null;
             Assert.DoesNotThrow(
-                () => output = new Output(connector, TestResources.OutputName));
+                () => output = connector.GetOutput(TestResources.OutputName));
             Assert.IsNotNull(output.InternalOutput);
         }
 
         [Test]
-        public void ConstructorSetsProperties()
+        public void SetsProperties()
         {
-            Output output = new Output(connector, TestResources.OutputName);
+            Output output = connector.GetOutput(TestResources.OutputName);
             Assert.AreEqual(TestResources.OutputName, output.Name);
             Assert.IsNotNull(output.Instance);
         }
@@ -73,7 +66,7 @@ namespace RTI.Connector.UnitTests
         [Test]
         public void WriteAfterDisposeThrowsException()
         {
-            Output output = new Output(connector, TestResources.OutputName);
+            Output output = connector.GetOutput(TestResources.OutputName);
             output.Dispose();
             Assert.Throws<ObjectDisposedException>(output.Write);
         }
@@ -81,7 +74,7 @@ namespace RTI.Connector.UnitTests
         [Test]
         public void WriteWithDisposedConnectorThrowsException()
         {
-            Output output = new Output(connector, TestResources.OutputName);
+            Output output = connector.GetOutput(TestResources.OutputName);
             connector.Dispose();
             Assert.Throws<ObjectDisposedException>(output.Write);
         }
@@ -89,14 +82,14 @@ namespace RTI.Connector.UnitTests
         [Test]
         public void WriteDoesNotThrowException()
         {
-            Output output = new Output(connector, TestResources.OutputName);
+            Output output = connector.GetOutput(TestResources.OutputName);
             Assert.DoesNotThrow(output.Write);
         }
 
         [Test]
         public void DisposeChangesProperty()
         {
-            Output output = new Output(connector, TestResources.OutputName);
+            Output output = connector.GetOutput(TestResources.OutputName);
             Assert.IsFalse(output.Disposed);
             output.Dispose();
             Assert.IsTrue(output.Disposed);
@@ -105,7 +98,7 @@ namespace RTI.Connector.UnitTests
         [Test]
         public void DisposeDoesNotDisposeConnector()
         {
-            Output output = new Output(connector, TestResources.OutputName);
+            Output output = connector.GetOutput(TestResources.OutputName);
             output.Dispose();
             Assert.IsTrue(output.Disposed);
             Assert.IsFalse(connector.Disposed);
@@ -114,7 +107,7 @@ namespace RTI.Connector.UnitTests
         [Test]
         public void DisposingTwiceDoesNotThrowException()
         {
-            Output output = new Output(connector, TestResources.OutputName);
+            Output output = connector.GetOutput(TestResources.OutputName);
             output.Dispose();
             Assert.DoesNotThrow(output.Dispose);
             Assert.IsTrue(output.Disposed);

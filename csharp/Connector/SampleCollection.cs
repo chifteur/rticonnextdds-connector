@@ -5,7 +5,7 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector
+namespace RTI.Connext.Connector
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -77,8 +77,9 @@ namespace RTI.Connector
             /// </returns>
             public bool MoveNext()
             {
-                if (index >= count)
+                if (index >= count) {
                     return false;
+                }
 
                 index++;
                 return true;

@@ -7,7 +7,6 @@
 // This code contains trade secrets of Real-Time Innovations, Inc.
 using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("RTI Connext DDS Connector UnitTests")]
@@ -18,6 +17,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("(c) Copyright, Real-Time Innovations, 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0")]
+[assembly: AssemblyVersion("0.3.1")]
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(true)]

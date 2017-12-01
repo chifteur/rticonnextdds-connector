@@ -5,7 +5,7 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector.Interface
+namespace RTI.Connext.Connector.Interface
 {
     using System;
     using System.Runtime.InteropServices;
@@ -21,8 +21,9 @@ namespace RTI.Connector.Interface
 
         public void SetNumber(string field, int val)
         {
-            if (output.Connector.Disposed)
+            if (output.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
+            }
 
             NativeMethods.RTIDDSConnector_setNumberIntoSamples(
                 output.Connector.Handle,
@@ -33,8 +34,9 @@ namespace RTI.Connector.Interface
 
         public void SetBool(string field, bool val)
         {
-            if (output.Connector.Disposed)
+            if (output.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
+            }
 
             NativeMethods.RTIDDSConnector_setBooleanIntoSamples(
                 output.Connector.Handle,
@@ -45,8 +47,9 @@ namespace RTI.Connector.Interface
 
         public void SetString(string field, string val)
         {
-            if (output.Connector.Disposed)
+            if (output.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
+            }
 
             NativeMethods.RTIDDSConnector_setStringIntoSamples(
                 output.Connector.Handle,
@@ -57,8 +60,9 @@ namespace RTI.Connector.Interface
 
         public void SetJson(string json)
         {
-            if (output.Connector.Disposed)
+            if (output.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
+            }
 
             NativeMethods.RTIDDSConnector_setJSONInstance(
                 output.Connector.Handle,
@@ -68,8 +72,9 @@ namespace RTI.Connector.Interface
 
         public void Clear()
         {
-            if (output.Connector.Disposed)
+            if (output.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
+            }
 
             NativeMethods.RTIDDSConnector_clear(
                 output.Connector.Handle,

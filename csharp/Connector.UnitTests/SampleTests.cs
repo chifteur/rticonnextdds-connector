@@ -5,7 +5,7 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector.UnitTests
+namespace RTI.Connext.Connector.UnitTests
 {
     using System;
     using System.Collections;
@@ -28,8 +28,8 @@ namespace RTI.Connector.UnitTests
         public void SetUp()
         {
             connector = TestResources.CreatePubSubConnector();
-            output = new Output(connector, TestResources.OutputName);
-            input = new Input(connector, TestResources.InputName);
+            output = connector.GetOutput(TestResources.OutputName);
+            input = connector.GetInput(TestResources.InputName);
             samples = input.Samples;
 
             // Wait for discovery
@@ -56,8 +56,10 @@ namespace RTI.Connector.UnitTests
         {
             SendAndTakeOrReadStandardSample(true);
             int count = 0;
-            foreach (var sample in samples)
+            foreach (var sample in samples) {
                 count++;
+            }
+
             Assert.AreEqual(1, count);
         }
 
@@ -206,53 +208,54 @@ namespace RTI.Connector.UnitTests
         public void GetValidObjectSample()
         {
             MyClassType obj = new MyClassType {
-                color = "test",
-                x = 3,
-                hidden = true };
+                Color = "test",
+                X = 3,
+                Hidden = true
+            };
 
             SendAndTakeOrReadObjectSample(obj, true);
             Sample sample = samples.Single();
             MyClassType received = sample.GetAs<MyClassType>();
 
-            Assert.AreEqual("test", received.color);
-            Assert.AreEqual(3, received.x);
-            Assert.AreEqual(true, received.hidden);
+            Assert.AreEqual("test", received.Color);
+            Assert.AreEqual(3, received.X);
+            Assert.AreEqual(true, received.Hidden);
         }
 
         [Test]
         public void GetValidStructSample()
         {
             MyStructType obj = new MyStructType {
-                color = "test",
-                x = 3,
-                hidden = true
+                Color = "test",
+                X = 3,
+                Hidden = true
             };
 
             SendAndTakeOrReadObjectSample(obj, true);
             Sample sample = samples.Single();
             MyStructType received = sample.GetAs<MyStructType>();
 
-            Assert.AreEqual("test", received.color);
-            Assert.AreEqual(3, received.x);
-            Assert.AreEqual(true, received.hidden);
+            Assert.AreEqual("test", received.Color);
+            Assert.AreEqual(3, received.X);
+            Assert.AreEqual(true, received.Hidden);
         }
 
         [Test]
         public void SendClassAndReceiveStructSample()
         {
             MyStructType obj = new MyStructType {
-                color = "test",
-                x = 3,
-                hidden = true
+                Color = "test",
+                X = 3,
+                Hidden = true
             };
 
             SendAndTakeOrReadObjectSample(obj, true);
             Sample sample = samples.Single();
             MyClassType received = sample.GetAs<MyClassType>();
 
-            Assert.AreEqual("test", received.color);
-            Assert.AreEqual(3, received.x);
-            Assert.AreEqual(true, received.hidden);
+            Assert.AreEqual("test", received.Color);
+            Assert.AreEqual(3, received.X);
+            Assert.AreEqual(true, received.Hidden);
         }
 
         [Test]
@@ -292,36 +295,36 @@ namespace RTI.Connector.UnitTests
         }
 
         [Test]
-        public void GetCompleClassSample()
+        public void GetCompleteClassSample()
         {
             ComplexType obj = new ComplexType {
-                color = "test",
-                x = 3,
-                angle = 3.14f,
-                hidden = true,
-                list = new[] { 0, 1, 2, 3, 4 },
-                inner = new ComplexType.Inner { z = -1 }
+                Color = "test",
+                X = 3,
+                Angle = 3.14f,
+                Hidden = true,
+                List = new[] { 0, 1, 2, 3, 4 },
+                Inner = new ComplexType.InnerType { Z = -1 }
             };
 
             SendAndTakeOrReadObjectSample(obj, true);
             Sample sample = samples.Single();
             ComplexType received = sample.GetAs<ComplexType>();
 
-            Assert.AreEqual("test", received.color);
-            Assert.AreEqual(3, received.x);
-            Assert.AreEqual(true, received.hidden);
-            Assert.AreEqual(3.14f, received.angle);
-            Assert.AreEqual(5, received.list.Length);
-            Assert.AreEqual(3, received.list[3]);
-            Assert.AreEqual(-1, received.inner.z);
+            Assert.AreEqual("test", received.Color);
+            Assert.AreEqual(3, received.X);
+            Assert.AreEqual(true, received.Hidden);
+            Assert.AreEqual(3.14f, received.Angle);
+            Assert.AreEqual(5, received.List.Length);
+            Assert.AreEqual(3, received.List[3]);
+            Assert.AreEqual(-1, received.Inner.Z);
         }
 
         [Test]
         public void GetClassWithInvalidFieldsThrowsException()
         {
             MyInvalidClassType obj = new MyInvalidClassType {
-                color = 3,
-                x = 3.3,
+                Color = 3,
+                X = 3.3,
             };
 
             SendAndTakeOrReadObjectSample(obj, true);
@@ -334,8 +337,8 @@ namespace RTI.Connector.UnitTests
         public void GetClassWithMissingFieldsIsEmpty()
         {
             MyFakeFieldsTypes obj = new MyFakeFieldsTypes {
-                color = "blue",
-                x = 3,
+                Color = "blue",
+                X = 3,
                 Fake = 4,
             };
 
@@ -343,8 +346,8 @@ namespace RTI.Connector.UnitTests
             Sample sample = samples.Single();
             MyFakeFieldsTypes received = sample.GetAs<MyFakeFieldsTypes>();
 
-            Assert.AreEqual("blue", received.color);
-            Assert.AreEqual(3, received.x);
+            Assert.AreEqual("blue", received.Color);
+            Assert.AreEqual(3, received.X);
             Assert.AreEqual(0, received.Fake);
         }
 
@@ -376,10 +379,11 @@ namespace RTI.Connector.UnitTests
         public void GetJsonSampleAfterDisposingConnectorThrowsException()
         {
             MyClassType obj = new MyClassType {
-                color = "test",
-                x = 3,
-                hidden = true
+                Color = "test",
+                X = 3,
+                Hidden = true
             };
+
             SendAndTakeOrReadObjectSample(obj, true);
             Sample sample = samples.Single();
             connector.Dispose();
@@ -391,16 +395,17 @@ namespace RTI.Connector.UnitTests
         {
             output.Instance.Set("shapesize", 10);
             MyClassType obj = new MyClassType {
-                color = "test",
-                x = 3,
-                hidden = true
+                Color = "test",
+                X = 3,
+                Hidden = true
             };
+
             output.Instance.SetFrom(obj);
             output.Instance.Set("x", 5);
             output.Instance.Set("y", 4);
             output.Write();
 
-            Assert.IsTrue(connector.WaitForSamples(1000));
+            Assert.IsTrue(connector.Wait(1000));
             input.Take();
             Sample sample = samples.Single();
 
@@ -418,14 +423,15 @@ namespace RTI.Connector.UnitTests
             output.Instance.Set("x", 5);
             output.Instance.Set("y", 4);
             MyClassType obj = new MyClassType {
-                color = "test",
-                x = 3,
-                hidden = true
+                Color = "test",
+                X = 3,
+                Hidden = true
             };
+
             output.Instance.SetFrom(obj);
             output.Write();
 
-            Assert.IsTrue(connector.WaitForSamples(1000));
+            Assert.IsTrue(connector.Wait(1000));
             input.Take();
             Sample sample = samples.Single();
 
@@ -441,8 +447,9 @@ namespace RTI.Connector.UnitTests
         // Helper extension method
         static IEnumerable NonGenericSampleEnumerable(IEnumerable samples)
         {
-            foreach (object sample in samples)
+            foreach (object sample in samples) {
                 yield return sample;
+            }
         }
 
         void SendAndTakeOrReadStandardSample(bool take)
@@ -453,11 +460,12 @@ namespace RTI.Connector.UnitTests
             output.Instance.Set("hidden", true);
             output.Write();
 
-            Assert.IsTrue(connector.WaitForSamples(1000));
-            if (take)
+            Assert.IsTrue(connector.Wait(1000));
+            if (take) {
                 input.Take();
-            else
+            } else {
                 input.Read();
+            }
         }
 
         void SendAndTakeOrReadObjectSample(object obj, bool take)
@@ -465,11 +473,12 @@ namespace RTI.Connector.UnitTests
             output.Instance.SetFrom(obj);
             output.Write();
 
-            Assert.IsTrue(connector.WaitForSamples(1000));
-            if (take)
+            Assert.IsTrue(connector.Wait(1000));
+            if (take) {
                 input.Take();
-            else
+            } else {
                 input.Read();
+            }
         }
     }
 }

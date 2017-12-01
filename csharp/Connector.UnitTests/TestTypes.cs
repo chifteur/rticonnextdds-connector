@@ -5,56 +5,64 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector.UnitTests
+namespace RTI.Connext.Connector.UnitTests
 {
-    // We are using fields without upper case to match XML defined members
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
+
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     class MyClassType
     {
-        public string color { get; set; }
+        public string Color { get; set; }
 
-        public int x { get; set; }
+        public int X { get; set; }
 
-        public bool hidden { get; set; }
+        public bool Hidden { get; set; }
     }
 
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     class MyInvalidClassType
     {
-        public int color { get; set; }
+        public int Color { get; set; }
 
-        public double x { get; set; }
+        public double X { get; set; }
     }
 
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     class MyFakeFieldsTypes
     {
-        public string color { get; set; }
+        public string Color { get; set; }
 
-        public int x { get; set; }
+        public int X { get; set; }
 
-        public bool hidden { get; set; }
+        public bool Hidden { get; set; }
 
         public int Fake { get; set; }
     }
 
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     struct MyStructType
     {
-        public string color { get; set; }
+        public string Color { get; set; }
 
-        public int x { get; set; }
+        public int X { get; set; }
 
-        public bool hidden { get; set; }
+        public bool Hidden { get; set; }
     }
 
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     class ComplexType : MyClassType
     {
-        public float angle { get; set; } 
+        public float Angle { get; set; } 
 
-        public int[] list { get; set; }
+        public int[] List { get; set; }
 
-        public Inner inner { get; set; }
+        public InnerType Inner { get; set; }
 
-        public class Inner
+        [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+        public class InnerType
         {
-            public int z { get; set; }
+            public int Z { get; set; }
         }
     }
 }

@@ -5,7 +5,7 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector.UnitTests
+namespace RTI.Connext.Connector.UnitTests
 {
     using System;
     using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace RTI.Connector.UnitTests
         public void SetUp()
         {
             connector = TestResources.CreatePublisherConnector();
-            output = new Output(connector, TestResources.OutputName);
+            output = connector.GetOutput(TestResources.OutputName);
             instance = output.Instance;
         }
 
@@ -108,9 +108,9 @@ namespace RTI.Connector.UnitTests
         public void SetFieldsAfterDisposingConnectorThrowsException()
         {
             MyClassType sample = new MyClassType {
-                color = "test",
-                x = 3,
-                hidden = true
+                Color = "test",
+                X = 3,
+                Hidden = true
             };
 
             connector.Dispose();
@@ -131,9 +131,9 @@ namespace RTI.Connector.UnitTests
         public void SetClassObjectWithValidTypesDoesNotThrowException()
         {
             MyClassType sample = new MyClassType {
-                color = "test",
-                x = 3,
-                hidden = true
+                Color = "test",
+                X = 3,
+                Hidden = true
             };
             Assert.DoesNotThrow(() => instance.SetFrom(sample));
             Assert.DoesNotThrow(output.Write);
@@ -143,9 +143,9 @@ namespace RTI.Connector.UnitTests
         public void SetStructObjectWithValidTypesDoesNotThrowException()
         {
             MyStructType sample = new MyStructType {
-                color = "test",
-                x = 3,
-                hidden = true
+                Color = "test",
+                X = 3,
+                Hidden = true
             };
             Assert.DoesNotThrow(() => instance.SetFrom(sample));
             Assert.DoesNotThrow(output.Write);
@@ -180,8 +180,8 @@ namespace RTI.Connector.UnitTests
         public void SetClassObjectWithInvalidTypesDoesNotThrowException()
         {
             MyInvalidClassType sample = new MyInvalidClassType {
-                color = 4,
-                x = 3.3,
+                Color = 4,
+                X = 3.3,
             };
             Assert.DoesNotThrow(() => instance.SetFrom(sample));
             Assert.DoesNotThrow(output.Write);
@@ -191,7 +191,7 @@ namespace RTI.Connector.UnitTests
         public void SetClassObjectWithMissingTypesDoesNotThrowException()
         {
             MyFakeFieldsTypes sample = new MyFakeFieldsTypes {
-                color = "test",
+                Color = "test",
                 Fake = 3,
             };
             Assert.DoesNotThrow(() => instance.SetFrom(sample));

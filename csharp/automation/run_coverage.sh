@@ -3,7 +3,7 @@ ROOT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/..
 export LD_LIBRARY_PATH=${ROOT_DIR}/../lib/x64Linux2.6gcc4.4.5
 
 NUNIT=`ls ${ROOT_DIR}/testrunner/NUnit.ConsoleRunner.*/tools/nunit3-console.exe`
-echo '^RTI.Connector\.[^U][\.A-Za-z0-9`]+$' > $NUNIT.covcfg
+echo '^RTI\.[^U][\.A-Za-z0-9`]+$' > $NUNIT.covcfg
 
 # From https://github.com/inorton/XR.Baboon/
 echo 'Running covem'

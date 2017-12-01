@@ -5,7 +5,7 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector.UnitTests
+namespace RTI.Connext.Connector.UnitTests
 {
     using System;
     using System.Diagnostics;
@@ -36,16 +36,16 @@ namespace RTI.Connector.UnitTests
         [Test]
         public void ConstructorWithMissingConfigFileThrowsException()
         {
-            Assert.Throws<COMException>(
+            Assert.Throws<SEHException>(
                 () => new Connector(TestResources.PublisherConfig, "FakeConfig.xml"));
         }
 
         [Test]
         public void ConstructorWithInvalidConfigNameThrowsException()
         {
-            Assert.Throws<COMException>(
+            Assert.Throws<SEHException>(
                 () => new Connector("InvalidLib::PartPub", TestResources.ConfigPath));
-            Assert.Throws<COMException>(
+            Assert.Throws<SEHException>(
                 () => new Connector("PartLib::InvalidPart", TestResources.ConfigPath));
         }
 
@@ -65,8 +65,9 @@ namespace RTI.Connector.UnitTests
         public void CreatingAndDeletingConnectorIsSuccessful()
         {
             int tries = 5;
-            for (int i = 0; i < tries; i++)
+            for (int i = 0; i < tries; i++) {
                 ConstructorWithValidConfigIsSuccessful();
+            }
         }
 
         [Test]
@@ -101,7 +102,7 @@ namespace RTI.Connector.UnitTests
         {
             using (var connector = TestResources.CreatePublisherConnector()) {
                 Assert.Throws<ArgumentOutOfRangeException>(
-                    () => connector.WaitForSamples(-10));
+                    () => connector.Wait(-10));
             }
         }
 
@@ -114,7 +115,7 @@ namespace RTI.Connector.UnitTests
         {
             using (var connector = TestResources.CreatePublisherConnector()) {
                 Stopwatch watch = Stopwatch.StartNew();
-                Assert.IsFalse(connector.WaitForSamples(0));
+                Assert.IsFalse(connector.Wait(0));
                 watch.Stop();
                 Assert.Less(watch.ElapsedMilliseconds, 10);
             }
@@ -125,7 +126,7 @@ namespace RTI.Connector.UnitTests
         {
             using (var connector = TestResources.CreatePublisherConnector()) {
                 Stopwatch watch = Stopwatch.StartNew();
-                Assert.IsFalse(connector.WaitForSamples(100));
+                Assert.IsFalse(connector.Wait(100));
                 watch.Stop();
                 Assert.Less(watch.ElapsedMilliseconds, 110);
                 Assert.Greater(watch.ElapsedMilliseconds, 90);
@@ -137,7 +138,7 @@ namespace RTI.Connector.UnitTests
         {
             using (var connector = TestResources.CreatePublisherConnector()) {
                 Stopwatch watch = Stopwatch.StartNew();
-                Assert.IsFalse(connector.WaitForSamples(1000));
+                Assert.IsFalse(connector.Wait(1000));
                 watch.Stop();
                 Assert.Less(watch.ElapsedMilliseconds, 1100);
                 Assert.Greater(watch.ElapsedMilliseconds, 900);
@@ -150,7 +151,7 @@ namespace RTI.Connector.UnitTests
         {
             Connector connector = TestResources.CreatePublisherConnector();
             connector.Dispose();
-            Assert.Throws<ObjectDisposedException>(() => connector.WaitForSamples(0));
+            Assert.Throws<ObjectDisposedException>(() => connector.Wait(0));
         }
     }
 }

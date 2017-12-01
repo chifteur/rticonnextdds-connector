@@ -5,7 +5,7 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector.Interface
+namespace RTI.Connext.Connector.Interface
 {
     using System;
     using System.Runtime.InteropServices;
@@ -23,8 +23,9 @@ namespace RTI.Connector.Interface
 
         public int GetNumberFromSample(string field)
         {
-            if (input.Connector.Disposed)
+            if (input.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
+            }
 
             return (int)NativeMethods.RTIDDSConnector_getNumberFromSamples(
                 input.Connector.Handle,
@@ -35,8 +36,9 @@ namespace RTI.Connector.Interface
 
         public bool GetBoolFromSample(string field)
         {
-            if (input.Connector.Disposed)
+            if (input.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
+            }
 
             return NativeMethods.RTIDDSConnector_getBooleanFromSamples(
                 input.Connector.Handle,
@@ -47,8 +49,9 @@ namespace RTI.Connector.Interface
 
         public string GetStringFromSample(string field)
         {
-            if (input.Connector.Disposed)
+            if (input.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
+            }
 
             return NativeMethods.RTIDDSConnector_getStringFromSamples(
                 input.Connector.Handle,
@@ -59,8 +62,9 @@ namespace RTI.Connector.Interface
 
         public string GetJsonFromSample()
         {
-            if (input.Connector.Disposed)
+            if (input.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
+            }
 
             return NativeMethods.RTIDDSConnector_getJSONSample(
                 input.Connector.Handle,
@@ -70,8 +74,9 @@ namespace RTI.Connector.Interface
 
         public bool GetBoolFromInfo(string field)
         {
-            if (input.Connector.Disposed)
+            if (input.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
+            }
 
             return NativeMethods.RTIDDSConnector_getBooleanFromInfos(
                 input.Connector.Handle,

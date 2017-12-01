@@ -5,7 +5,7 @@
 // without express written permission.  Any such copies, or
 // revisions thereof, must display this notice unaltered.
 // This code contains trade secrets of Real-Time Innovations, Inc.
-namespace RTI.Connector
+namespace RTI.Connext.Connector
 {
     using System;
 
@@ -21,13 +21,8 @@ namespace RTI.Connector
         /// </summary>
         /// <param name="connector">Parent connector.</param>
         /// <param name="entityName">Entity name.</param>
-        public Input(Connector connector, string entityName)
+        internal Input(Connector connector, string entityName)
         {
-            if (connector == null)
-                throw new ArgumentNullException(nameof(connector));
-            if (string.IsNullOrEmpty(entityName))
-                throw new ArgumentNullException(nameof(entityName));
-
             Name = entityName;
             input = new Interface.Input(
                 connector.InternalConnector,
@@ -75,8 +70,9 @@ namespace RTI.Connector
         /// </remarks>
         public void Read()
         {
-            if (Disposed)
+            if (Disposed) {
                 throw new ObjectDisposedException(nameof(Input));
+            }
 
             input.Read();
         }
@@ -90,8 +86,9 @@ namespace RTI.Connector
         /// </remarks>
         public void Take()
         {
-            if (Disposed)
+            if (Disposed) {
                 throw new ObjectDisposedException(nameof(Input));
+            }
 
             input.Take();
         }
@@ -110,12 +107,14 @@ namespace RTI.Connector
 
         protected virtual void Dispose(bool freeManagedResources)
         {
-            if (Disposed)
+            if (Disposed) {
                 return;
+            }
 
             Disposed = true;
-            if (freeManagedResources)
+            if (freeManagedResources) {
                 input.Dispose();
+            }
         }
     }
 }

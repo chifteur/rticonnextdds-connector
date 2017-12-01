@@ -18,7 +18,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("(c) Copyright, Real-Time Innovations, 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0")]
+[assembly: AssemblyVersion("0.3.1")]
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(true)]
 [assembly: InternalsVisibleTo("librtiddsconnector_dotnet.UnitTests")]
