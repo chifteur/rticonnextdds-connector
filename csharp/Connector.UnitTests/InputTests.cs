@@ -29,34 +29,7 @@ namespace RTI.Connext.Connector.UnitTests
         }
 
         [Test]
-        public void GetterWithNullOrEmptyEntityNameThrowsException()
-        {
-            Assert.Throws<ArgumentNullException>(
-                () => connector.GetInput(null));
-            Assert.Throws<ArgumentNullException>(
-                () => connector.GetInput(string.Empty));
-        }
-
-        [Test]
-        public void GetterWithMissingEntityNameThrowsException()
-        {
-            Assert.Throws<SEHException>(
-                () => connector.GetInput("FakeSubscriber::MySquareReader"));
-            Assert.Throws<SEHException>(
-                () => connector.GetInput("MySubscriber::FakeReader"));
-        }
-
-        [Test]
-        public void GetterWithValidConfigIsSuccessful()
-        {
-            Input input = null;
-            Assert.DoesNotThrow(
-                () => input = connector.GetInput(TestResources.InputName));
-            Assert.IsNotNull(input.InternalInput);
-        }
-
-        [Test]
-        public void ConstructorSetsProperties()
+        public void SetsProperties()
         {
             Input input = connector.GetInput(TestResources.InputName);
             Assert.AreEqual(TestResources.InputName, input.Name);

@@ -11,6 +11,18 @@ namespace RTI.Connext.Connector.UnitTests
     using Newtonsoft.Json.Serialization;
 
     [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+    struct MyStructType
+    {
+        public string Color { get; set; }
+
+        public int X { get; set; }
+
+        public bool Hidden { get; set; }
+
+        public float Angle { get; set; }
+    }
+
+    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     class MyClassType
     {
         public string Color { get; set; }
@@ -18,6 +30,8 @@ namespace RTI.Connext.Connector.UnitTests
         public int X { get; set; }
 
         public bool Hidden { get; set; }
+
+        public float Angle { get; set; }
     }
 
     [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
@@ -41,20 +55,8 @@ namespace RTI.Connext.Connector.UnitTests
     }
 
     [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
-    struct MyStructType
-    {
-        public string Color { get; set; }
-
-        public int X { get; set; }
-
-        public bool Hidden { get; set; }
-    }
-
-    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     class ComplexType : MyClassType
     {
-        public float Angle { get; set; } 
-
         public int[] List { get; set; }
 
         public InnerType Inner { get; set; }

@@ -39,6 +39,15 @@ namespace RTI.Connext.Connector.Interface
             private set;
         }
 
+        public void Clear()
+        {
+            if (Connector.Disposed) {
+                throw new ObjectDisposedException(nameof(Connector));
+            }
+
+            NativeMethods.RTIDDSConnector_clear(Connector.Handle, EntityName);
+        }
+
         public void Write()
         {
             if (Connector.Disposed) {
@@ -65,6 +74,11 @@ namespace RTI.Connext.Connector.Interface
         {
             [DllImport("rtiddsconnector", CharSet = CharSet.Ansi)]
             public static extern IntPtr RTIDDSConnector_getWriter(
+                Connector.ConnectorPtr connectorHandle,
+                string entityName);
+
+            [DllImport("rtiddsconnector", CharSet = CharSet.Ansi)]
+            public static extern void RTIDDSConnector_clear(
                 Connector.ConnectorPtr connectorHandle,
                 string entityName);
 

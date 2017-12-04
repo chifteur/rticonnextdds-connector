@@ -60,6 +60,18 @@ namespace RTI.Connext.Connector
         }
 
         /// <summary>
+        /// Clear all the members of the associated instance.
+        /// </summary>
+        public void ClearValues()
+        {
+            if (Disposed) {
+                throw new ObjectDisposedException(nameof(Output));
+            }
+
+            output.Clear();
+        }
+
+        /// <summary>
         /// Write the output instance.
         /// </summary>
         public void Write()

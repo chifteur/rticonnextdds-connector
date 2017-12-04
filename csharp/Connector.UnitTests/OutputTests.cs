@@ -29,38 +29,13 @@ namespace RTI.Connext.Connector.UnitTests
         }
 
         [Test]
-        public void GetterWithNullOrEmptyEntityNameThrowsException()
-        {
-            Assert.Throws<ArgumentNullException>(
-                () => connector.GetOutput(null));
-            Assert.Throws<ArgumentNullException>(
-                () => connector.GetOutput(string.Empty));
-        }
-
-        [Test]
-        public void GetterWithMissingEntityNameThrowsException()
-        {
-            Assert.Throws<COMException>(
-                () => connector.GetOutput("FakePublisher::MySquareWriter"));
-            Assert.Throws<COMException>(
-                () => connector.GetOutput("MyPublisher::FakeWriter"));
-        }
-
-        [Test]
-        public void GetterWithValidConfigIsSuccessful()
-        {
-            Output output = null;
-            Assert.DoesNotThrow(
-                () => output = connector.GetOutput(TestResources.OutputName));
-            Assert.IsNotNull(output.InternalOutput);
-        }
-
-        [Test]
         public void SetsProperties()
         {
             Output output = connector.GetOutput(TestResources.OutputName);
             Assert.AreEqual(TestResources.OutputName, output.Name);
             Assert.IsNotNull(output.Instance);
+            Assert.IsNotNull(output.InternalOutput);
+            Assert.IsFalse(output.Disposed);
         }
 
         [Test]
@@ -84,6 +59,54 @@ namespace RTI.Connext.Connector.UnitTests
         {
             Output output = connector.GetOutput(TestResources.OutputName);
             Assert.DoesNotThrow(output.Write);
+        }
+
+        [Test]
+        public void ClearDoesNotThrowExceptionWithoutSettingFields()
+        {
+            Output output = connector.GetOutput(TestResources.OutputName);
+            Assert.DoesNotThrow(output.ClearValues);
+        }
+
+        [Test]
+        public void ClearDoesNotThrowExceptionAfterSettingFields()
+        {
+            Output output = connector.GetOutput(TestResources.OutputName);
+            output.Instance.SetValue("x", 3);
+            Assert.DoesNotThrow(output.ClearValues);
+        }
+
+        [Test]
+        public void ClearDoesNotThrowExceptionAfterInvalidAssignment()
+        {
+            Output output = connector.GetOutput(TestResources.OutputName);
+            output.Instance.SetValue("fakeInt", 4);
+            Assert.DoesNotThrow(output.ClearValues);
+
+            Assert.DoesNotThrow(() => output.Instance.SetValue("x", "test"));
+            Assert.DoesNotThrow(output.ClearValues);
+
+            Assert.DoesNotThrow(() => output.Instance.SetValue("color", 3));
+            Assert.DoesNotThrow(output.ClearValues);
+
+            Assert.DoesNotThrow(() => output.Instance.SetValue("hidden", "test"));
+            Assert.DoesNotThrow(output.ClearValues);
+        }
+
+        [Test]
+        public void ClearFieldsAfterDisposeThrowsException()
+        {
+            Output output = connector.GetOutput(TestResources.OutputName);
+            output.Dispose();
+            Assert.Throws<ObjectDisposedException>(output.ClearValues);
+        }
+
+        [Test]
+        public void ClearFieldsAfterDisposingConnectorThrowsException()
+        {
+            Output output = connector.GetOutput(TestResources.OutputName);
+            connector.Dispose();
+            Assert.Throws<ObjectDisposedException>(output.ClearValues);
         }
 
         [Test]

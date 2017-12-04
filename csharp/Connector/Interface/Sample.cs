@@ -21,13 +21,13 @@ namespace RTI.Connext.Connector.Interface
             this.index = index;
         }
 
-        public int GetNumberFromSample(string field)
+        public double GetNumberFromSample(string field)
         {
             if (input.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
             }
 
-            return (int)NativeMethods.RTIDDSConnector_getNumberFromSamples(
+            return NativeMethods.RTIDDSConnector_getNumberFromSamples(
                 input.Connector.Handle,
                 input.EntityName,
                 index,

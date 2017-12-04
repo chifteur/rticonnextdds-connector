@@ -98,9 +98,87 @@ namespace RTI.Connext.Connector.UnitTests
         }
 
         [Test]
+        public void GetOutputWithNullOrEmptyEntityNameThrowsException()
+        {
+            Connector connector = TestResources.CreatePublisherConnector();
+            Assert.Throws<ArgumentNullException>(
+                () => connector.GetOutput(null));
+            Assert.Throws<ArgumentNullException>(
+                () => connector.GetOutput(string.Empty));
+        }
+
+        [Test]
+        public void GetOutputAfterDisposeThrowsException()
+        {
+            Connector connector = TestResources.CreatePublisherConnector();
+            connector.Dispose();
+            Assert.Throws<ObjectDisposedException>(
+                () => connector.GetOutput(TestResources.OutputName));
+        }
+
+        [Test]
+        public void GetOutputWithMissingEntityNameThrowsException()
+        {
+            Connector connector = TestResources.CreatePublisherConnector();
+            Assert.Throws<COMException>(
+                () => connector.GetOutput("FakePublisher::MySquareWriter"));
+            Assert.Throws<COMException>(
+                () => connector.GetOutput("MyPublisher::FakeWriter"));
+        }
+
+        [Test]
+        public void GetOutputWithValidConfigIsSuccessful()
+        {
+            Connector connector = TestResources.CreatePublisherConnector();
+            Output output = null;
+            Assert.DoesNotThrow(
+                () => output = connector.GetOutput(TestResources.OutputName));
+            Assert.IsNotNull(output.InternalOutput);
+        }
+
+        [Test]
+        public void GetInputWithNullOrEmptyEntityNameThrowsException()
+        {
+            Connector connector = TestResources.CreateSubscriberConnector();
+            Assert.Throws<ArgumentNullException>(
+                () => connector.GetInput(null));
+            Assert.Throws<ArgumentNullException>(
+                () => connector.GetInput(string.Empty));
+        }
+
+        [Test]
+        public void GetInputWithMissingEntityNameThrowsException()
+        {
+            Connector connector = TestResources.CreateSubscriberConnector();
+            Assert.Throws<SEHException>(
+                () => connector.GetInput("FakeSubscriber::MySquareReader"));
+            Assert.Throws<SEHException>(
+                () => connector.GetInput("MySubscriber::FakeReader"));
+        }
+
+        [Test]
+        public void GetInputAfterDisposeThrowsException()
+        {
+            Connector connector = TestResources.CreateSubscriberConnector();
+            connector.Dispose();
+            Assert.Throws<ObjectDisposedException>(
+                () => connector.GetInput(TestResources.InputName));
+        }
+
+        [Test]
+        public void GetInputWithValidConfigIsSuccessful()
+        {
+            Connector connector = TestResources.CreateSubscriberConnector();
+            Input input = null;
+            Assert.DoesNotThrow(
+                () => input = connector.GetInput(TestResources.InputName));
+            Assert.IsNotNull(input.InternalInput);
+        }
+
+        [Test]
         public void WaitForSamplesWithNegativeTimeOutThrowsException()
         {
-            using (var connector = TestResources.CreatePublisherConnector()) {
+            using (var connector = TestResources.CreateSubscriberConnector()) {
                 Assert.Throws<ArgumentOutOfRangeException>(
                     () => connector.Wait(-10));
             }
@@ -111,9 +189,20 @@ namespace RTI.Connext.Connector.UnitTests
         // https://github.com/nunit/nunit/issues/1638
 #if NET45
         [Test, Timeout(1000)]
+        public void WaitForSamplesInMultipleThreadsThrowsException()
+        {
+            using (var connector = TestResources.CreateSubscriberConnector()) {
+                System.Threading.Tasks.Task.Run(
+                    () => Assert.IsFalse(connector.Wait(300)));
+                System.Threading.Thread.Sleep(100);
+                Assert.Throws<SEHException>(() => connector.Wait(100));
+            }
+        }
+
+        [Test, Timeout(1000)]
         public void WaitForSamplesWithZeroTimeOutDoesNotBlock()
         {
-            using (var connector = TestResources.CreatePublisherConnector()) {
+            using (var connector = TestResources.CreateSubscriberConnector()) {
                 Stopwatch watch = Stopwatch.StartNew();
                 Assert.IsFalse(connector.Wait(0));
                 watch.Stop();
@@ -124,7 +213,7 @@ namespace RTI.Connext.Connector.UnitTests
         [Test, Timeout(1000)]
         public void WaitForSamplesCanDoMsTimeOut()
         {
-            using (var connector = TestResources.CreatePublisherConnector()) {
+            using (var connector = TestResources.CreateSubscriberConnector()) {
                 Stopwatch watch = Stopwatch.StartNew();
                 Assert.IsFalse(connector.Wait(100));
                 watch.Stop();
@@ -136,12 +225,12 @@ namespace RTI.Connext.Connector.UnitTests
         [Test, Timeout(5000)]
         public void WaitForSamplesCanDoOneSecTimeOut()
         {
-            using (var connector = TestResources.CreatePublisherConnector()) {
+            using (var connector = TestResources.CreateSubscriberConnector()) {
                 Stopwatch watch = Stopwatch.StartNew();
                 Assert.IsFalse(connector.Wait(1000));
                 watch.Stop();
-                Assert.Less(watch.ElapsedMilliseconds, 1100);
-                Assert.Greater(watch.ElapsedMilliseconds, 900);
+                Assert.Less(watch.ElapsedMilliseconds, 1010);
+                Assert.Greater(watch.ElapsedMilliseconds, 990);
             }
         }
 #endif
@@ -149,7 +238,7 @@ namespace RTI.Connext.Connector.UnitTests
         [Test]
         public void WaitForSamplesAfterDisposeThrowsException()
         {
-            Connector connector = TestResources.CreatePublisherConnector();
+            Connector connector = TestResources.CreateSubscriberConnector();
             connector.Dispose();
             Assert.Throws<ObjectDisposedException>(() => connector.Wait(0));
         }

@@ -19,7 +19,7 @@ namespace RTI.Connext.Connector.Interface
             this.output = output;
         }
 
-        public void SetNumber(string field, int val)
+        public void SetNumber(string field, double val)
         {
             if (output.Connector.Disposed) {
                 throw new ObjectDisposedException(nameof(Connector));
@@ -70,17 +70,6 @@ namespace RTI.Connext.Connector.Interface
                 json);
         }
 
-        public void Clear()
-        {
-            if (output.Connector.Disposed) {
-                throw new ObjectDisposedException(nameof(Connector));
-            }
-
-            NativeMethods.RTIDDSConnector_clear(
-                output.Connector.Handle,
-                output.EntityName);
-        }
-
         static class NativeMethods
         {
             [DllImport("rtiddsconnector", CharSet = CharSet.Ansi)]
@@ -109,11 +98,6 @@ namespace RTI.Connext.Connector.Interface
                 Connector.ConnectorPtr connectorHandle,
                 string entityName,
                 string json);
-
-            [DllImport("rtiddsconnector", CharSet = CharSet.Ansi)]
-            public static extern void RTIDDSConnector_clear(
-                Connector.ConnectorPtr connectorHandle,
-                string entityName);
         }
     }
 }

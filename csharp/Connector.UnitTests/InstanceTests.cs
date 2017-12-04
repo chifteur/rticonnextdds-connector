@@ -37,142 +37,48 @@ namespace RTI.Connext.Connector.UnitTests
         public void SetNonExistingFieldsDoNotThrowException()
         {
             // You will see warning messages on the console instead
-            Assert.DoesNotThrow(() => instance.Set("fakeInt", 3));
-            Assert.DoesNotThrow(() => instance.Set("fakeString", "helloworld"));
-            Assert.DoesNotThrow(() => instance.Set("fakeBool", false));
-        }
-
-        [Test]
-        public void ClearDoesNotThrowExceptionWithoutSettingFields()
-        {
-            Assert.DoesNotThrow(instance.Clear);
-        }
-
-        [Test]
-        public void ClearDoesNotThrowExceptionAfterSettingFields()
-        {
-            instance.Set("x", 3);
-            Assert.DoesNotThrow(instance.Clear);
-        }
-
-        [Test]
-        public void ClearDoesNotThrowExceptionAfterInvalidAssignment()
-        {
-            instance.Set("fakeInt", 4);
-            Assert.DoesNotThrow(instance.Clear);
-
-            Assert.DoesNotThrow(() => instance.Set("x", "test"));
-            Assert.DoesNotThrow(instance.Clear);
-
-            Assert.DoesNotThrow(() => instance.Set("color", 3));
-            Assert.DoesNotThrow(instance.Clear);
-
-            Assert.DoesNotThrow(() => instance.Set("hidden", "test"));
-            Assert.DoesNotThrow(instance.Clear);
+            Assert.DoesNotThrow(() => instance.SetValue("fakeInt", 3));
+            Assert.DoesNotThrow(() => instance.SetValue("fakeString", "helloworld"));
+            Assert.DoesNotThrow(() => instance.SetValue("fakeBool", false));
+            Assert.DoesNotThrow(output.Write);
         }
 
         [Test]
         public void SetWrongVariableTypeForIntegersDoesNotThrowException()
         {
-            Assert.DoesNotThrow(() => instance.Set("x", "test"));
-            Assert.DoesNotThrow(() => instance.Set("shapesize", "3"));
-            Assert.DoesNotThrow(() => instance.Set("angle", "3.14"));
-            Assert.DoesNotThrow(() => instance.Set("x", true));
+            Assert.DoesNotThrow(() => instance.SetValue("x", "test"));
+            Assert.DoesNotThrow(() => instance.SetValue("shapesize", "3"));
+            Assert.DoesNotThrow(() => instance.SetValue("angle", "3.14"));
+            Assert.DoesNotThrow(() => instance.SetValue("x", true));
+            Assert.DoesNotThrow(output.Write);
         }
 
         [Test]
         public void SetWrongVariableTypeForStringsDoesNotThrowException()
         {
             // You will see warning messages on the console instead
-            Assert.DoesNotThrow(() => instance.Set("color", 3));
-            Assert.DoesNotThrow(() => instance.Set("color", true));
+            Assert.DoesNotThrow(() => instance.SetValue("color", 3));
+            Assert.DoesNotThrow(() => instance.SetValue("color", true));
+            Assert.DoesNotThrow(output.Write);
         }
 
         [Test]
         public void SetWrongVariableTypeForBoolDoesNotThrowException()
         {
-            Assert.DoesNotThrow(() => instance.Set("hidden", "test"));
-            Assert.DoesNotThrow(() => instance.Set("hidden", "true"));
-            Assert.DoesNotThrow(() => instance.Set("hidden", 0));
-        }
-
-        [Test]
-        public void SetCorrectTypesDoNotThrowException()
-        {
-            Assert.DoesNotThrow(() => instance.Set("x", 3));
-            Assert.DoesNotThrow(() => instance.Set("color", "BLUE"));
-            Assert.DoesNotThrow(() => instance.Set("hidden", false));
-        }
-
-        [Test]
-        public void SetFieldsAfterDisposingConnectorThrowsException()
-        {
-            MyClassType sample = new MyClassType {
-                Color = "test",
-                X = 3,
-                Hidden = true
-            };
-
-            connector.Dispose();
-            Assert.Throws<ObjectDisposedException>(() => instance.Set("x", 3));
-            Assert.Throws<ObjectDisposedException>(() => instance.Set("color", "BLUE"));
-            Assert.Throws<ObjectDisposedException>(() => instance.Set("hidden", false));
-            Assert.Throws<ObjectDisposedException>(() => instance.SetFrom(sample));
-        }
-
-        [Test]
-        public void ClearFieldsAfterDisposingConnectorThrowsException()
-        {
-            connector.Dispose();
-            Assert.Throws<ObjectDisposedException>(instance.Clear);
-        }
-
-        [Test]
-        public void SetClassObjectWithValidTypesDoesNotThrowException()
-        {
-            MyClassType sample = new MyClassType {
-                Color = "test",
-                X = 3,
-                Hidden = true
-            };
-            Assert.DoesNotThrow(() => instance.SetFrom(sample));
+            Assert.DoesNotThrow(() => instance.SetValue("hidden", "test"));
+            Assert.DoesNotThrow(() => instance.SetValue("hidden", "true"));
+            Assert.DoesNotThrow(() => instance.SetValue("hidden", 0));
             Assert.DoesNotThrow(output.Write);
         }
 
         [Test]
-        public void SetStructObjectWithValidTypesDoesNotThrowException()
+        public void SetClassObjectWithNonExistingTypesDoesNotThrowException()
         {
-            MyStructType sample = new MyStructType {
+            MyFakeFieldsTypes sample = new MyFakeFieldsTypes {
                 Color = "test",
-                X = 3,
-                Hidden = true
+                Fake = 3,
             };
-            Assert.DoesNotThrow(() => instance.SetFrom(sample));
-            Assert.DoesNotThrow(output.Write);
-        }
-
-        [Test]
-        public void SetObjectWithAnonymousTypesDoesNotThrowException()
-        {
-            var sample = new {
-                color = "test",
-                x = 3,
-                hidden = true
-            };
-            Assert.DoesNotThrow(() => instance.SetFrom(sample));
-            Assert.DoesNotThrow(output.Write);
-        }
-
-        [Test]
-        public void SetDictionaryWithValidTypesDoesNotThrowException()
-        {
-            var sample = new Dictionary<string, object> {
-                { "color", "test" },
-                { "x", 3 },
-                { "hidden", true }
-            };
-
-            Assert.DoesNotThrow(() => instance.SetFrom(sample));
+            Assert.DoesNotThrow(() => instance.SetValuesFrom(sample));
             Assert.DoesNotThrow(output.Write);
         }
 
@@ -183,19 +89,84 @@ namespace RTI.Connext.Connector.UnitTests
                 Color = 4,
                 X = 3.3,
             };
-            Assert.DoesNotThrow(() => instance.SetFrom(sample));
+            Assert.DoesNotThrow(() => instance.SetValuesFrom(sample));
             Assert.DoesNotThrow(output.Write);
         }
 
         [Test]
-        public void SetClassObjectWithMissingTypesDoesNotThrowException()
+        public void SetCorrectTypesDoNotThrowException()
         {
-            MyFakeFieldsTypes sample = new MyFakeFieldsTypes {
-                Color = "test",
-                Fake = 3,
-            };
-            Assert.DoesNotThrow(() => instance.SetFrom(sample));
+            Assert.DoesNotThrow(() => instance.SetValue("x", 3));
+            Assert.DoesNotThrow(() => instance.SetValue("angle", 3.14f));
+            Assert.DoesNotThrow(() => instance.SetValue("color", "BLUE"));
+            Assert.DoesNotThrow(() => instance.SetValue("hidden", false));
             Assert.DoesNotThrow(output.Write);
+        }
+
+        [Test]
+        public void SetClassObjectWithValidTypesDoesNotThrowException()
+        {
+            MyClassType sample = new MyClassType {
+                Color = "test",
+                X = 3,
+                Hidden = true,
+                Angle = 3.14f
+            };
+            Assert.DoesNotThrow(() => instance.SetValuesFrom(sample));
+            Assert.DoesNotThrow(output.Write);
+        }
+
+        [Test]
+        public void SetStructObjectWithValidTypesDoesNotThrowException()
+        {
+            MyStructType sample = new MyStructType {
+                Color = "test",
+                X = 3,
+                Hidden = true,
+                Angle = 3.14f
+            };
+            Assert.DoesNotThrow(() => instance.SetValuesFrom(sample));
+            Assert.DoesNotThrow(output.Write);
+        }
+
+        [Test]
+        public void SetObjectWithAnonymousTypesDoesNotThrowException()
+        {
+            var sample = new {
+                color = "test",
+                x = 3,
+                hidden = true,
+                angle = 3.14
+            };
+            Assert.DoesNotThrow(() => instance.SetValuesFrom(sample));
+            Assert.DoesNotThrow(output.Write);
+        }
+
+        [Test]
+        public void SetDictionaryWithValidTypesDoesNotThrowException()
+        {
+            var sample = new Dictionary<string, object> {
+                { "color", "test" },
+                { "x", 3 },
+                { "hidden", true },
+                { "angle", 3.14 }
+            };
+
+            Assert.DoesNotThrow(() => instance.SetValuesFrom(sample));
+            Assert.DoesNotThrow(output.Write);
+        }
+
+        [Test]
+        public void SetFieldsAfterDisposingConnectorThrowsException()
+        {
+            MyClassType sample = new MyClassType { Color = "test" };
+
+            connector.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => instance.SetValue("x", 3));
+            Assert.Throws<ObjectDisposedException>(() => instance.SetValue("angle", 3.3));
+            Assert.Throws<ObjectDisposedException>(() => instance.SetValue("color", "BLUE"));
+            Assert.Throws<ObjectDisposedException>(() => instance.SetValue("hidden", false));
+            Assert.Throws<ObjectDisposedException>(() => instance.SetValuesFrom(sample));
         }
     }
 }

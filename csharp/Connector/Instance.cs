@@ -24,19 +24,11 @@ namespace RTI.Connext.Connector
         }
 
         /// <summary>
-        /// Clear all the members of this instance.
-        /// </summary>
-        public void Clear()
-        {
-            instance.Clear();
-        }
-
-        /// <summary>
         /// Set the specified number value to a field.
         /// </summary>
         /// <param name="field">Field name.</param>
         /// <param name="value">Value for the field.</param>
-        public void Set(string field, int value)
+        public void SetValue(string field, double value)
         {
             instance.SetNumber(field, value);
         }
@@ -46,7 +38,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <param name="field">Field name.</param>
         /// <param name="value">Value for the field.</param>
-        public void Set(string field, bool value)
+        public void SetValue(string field, bool value)
         {
             instance.SetBool(field, value);
         }
@@ -56,7 +48,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <param name="field">Field name.</param>
         /// <param name="value">Value for the field.</param>
-        public void Set(string field, string value)
+        public void SetValue(string field, string value)
         {
             instance.SetString(field, value);
         }
@@ -65,7 +57,7 @@ namespace RTI.Connext.Connector
         /// Set instance fields from the object.
         /// </summary>
         /// <param name="obj">Object to serialize as json for the instance.</param>
-        public void SetFrom(object obj)
+        public void SetValuesFrom(object obj)
         {
             instance.SetJson(JsonConvert.SerializeObject(obj));
         }

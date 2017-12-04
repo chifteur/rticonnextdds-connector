@@ -8,7 +8,6 @@
 namespace RTI.Connext.Connector
 {
     using System;
-    using System.Globalization;
     using Newtonsoft.Json;
     
     /// <summary>
@@ -35,13 +34,75 @@ namespace RTI.Connext.Connector
         public bool IsValid => internalSample.GetBoolFromInfo("valid_data");
 
         /// <summary>
-        /// Gets the value from an integer field.
+        /// Gets the value from an double field.
         /// </summary>
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
-        public int GetInt(string field)
+        public double GetValueDouble(string field)
         {
             return internalSample.GetNumberFromSample(field);
+        }
+
+        /// <summary>
+        /// Gets the value from an float field.
+        /// </summary>
+        /// <returns>The field value.</returns>
+        /// <param name="field">Field name.</param>
+        public float GetValueFloat(string field)
+        {
+            return (float)internalSample.GetNumberFromSample(field);
+        }
+
+        /// <summary>
+        /// Gets the value from an byte field.
+        /// </summary>
+        /// <returns>The field value.</returns>
+        /// <param name="field">Field name.</param>
+        public byte GetValueByte(string field)
+        {
+            return (byte)internalSample.GetNumberFromSample(field);
+        }
+
+        /// <summary>
+        /// Gets the value from an short field.
+        /// </summary>
+        /// <returns>The field value.</returns>
+        /// <param name="field">Field name.</param>
+        public short GetValueInt16(string field)
+        {
+            return (short)internalSample.GetNumberFromSample(field);
+        }
+
+        /// <summary>
+        /// Gets the value from an ushort field.
+        /// </summary>
+        /// <returns>The field value.</returns>
+        /// <param name="field">Field name.</param>
+        [CLSCompliant(false)]
+        public ushort GetValueUInt16(string field)
+        {
+            return (ushort)internalSample.GetNumberFromSample(field);
+        }
+
+        /// <summary>
+        /// Gets the value from an int field.
+        /// </summary>
+        /// <returns>The field value.</returns>
+        /// <param name="field">Field name.</param>
+        public int GetValueInt32(string field)
+        {
+            return (int)internalSample.GetNumberFromSample(field);
+        }
+
+        /// <summary>
+        /// Gets the value from an uint field.
+        /// </summary>
+        /// <returns>The field value.</returns>
+        /// <param name="field">Field name.</param>
+        [CLSCompliant(false)]
+        public uint GetValueUInt32(string field)
+        {
+            return (uint)internalSample.GetNumberFromSample(field);
         }
 
         /// <summary>
@@ -49,7 +110,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
-        public bool GetBool(string field)
+        public bool GetValueBool(string field)
         {
             return internalSample.GetBoolFromSample(field);
         }
@@ -59,43 +120,16 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
-        public string GetString(string field)
+        public string GetValueString(string field)
         {
             return internalSample.GetStringFromSample(field);
-        }
-
-        /// <summary>
-        /// Get the specified field value.
-        /// </summary>
-        /// <returns>The field value.</returns>
-        /// <param name="field">Field name.</param>
-        /// <typeparam name="T">
-        /// The field type. It can be 'int', 'bool' or 'string'.
-        /// </typeparam>
-        public T Get<T>(string field)
-        {
-            object val;
-            if (typeof(T) == typeof(int)) {
-                val = GetInt(field);
-            } else if (typeof(T) == typeof(bool)) {
-                val = GetBool(field);
-            } else if (typeof(T) == typeof(string)) {
-                val = GetString(field);
-            } else {
-                throw new FormatException("Unsupported field type");
-            }
-
-            return (T)Convert.ChangeType(
-                val,
-                typeof(T),
-                CultureInfo.InvariantCulture);
         }
 
         /// <summary>
         /// Get the sample as a deserialized-JSON object.
         /// </summary>
         /// <returns>The sample.</returns>
-        public object GetAsObject()
+        public object GetSampleAsObject()
         {
             return JsonConvert.DeserializeObject(internalSample.GetJsonFromSample());
         }
@@ -105,7 +139,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <returns>The sample.</returns>
         /// <typeparam name="T">Type of the sample.</typeparam>
-        public T GetAs<T>()
+        public T GetSampleAs<T>()
         {
             return JsonConvert.DeserializeObject<T>(internalSample.GetJsonFromSample());
         }
