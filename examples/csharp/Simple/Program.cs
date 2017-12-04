@@ -1,15 +1,17 @@
-﻿// (c) Copyright, Real-Time Innovations, 2017.
-// All rights reserved.
+﻿// ﻿   (c) 2005-2017 Copyright, Real-Time Innovations, All rights reserved.
 //
-// No duplications, whole or partial, manual or electronic, may be made
-// without express written permission.  Any such copies, or
-// revisions thereof, must display this notice unaltered.
-// This code contains trade secrets of Real-Time Innovations, Inc.
+// RTI grants Licensee a license to use, modify, compile, and create
+// derivative works of the Software.  Licensee has the right to distribute
+// object form only for use with RTI products. The Software is provided
+// "as is", with no warranty of any type, including any warranty for fitness
+// for any purpose. RTI is under no obligation to maintain or support the
+// Software.  RTI shall not be liable for any incidental or consequential
+// damages arising out of the use or inability to use the software.
 namespace Simple
 {
     using System;
     using System.Threading;
-    using RTI.Connector;
+    using RTI.Connext.Connector;
 
     class Program
     {
@@ -38,46 +40,47 @@ namespace Simple
 
         static void Publish(Connector connector, int count)
         {
-            string writerName = "MyPublisher::MySquareWriter";
-            Writer writer = new Writer(connector, writerName);
+            string outputName = "MyPublisher::MySquareWriter";
+            Output output = connector.GetOutput(outputName);
 
-            Instance instance = writer.Instance;
+            Instance instance = output.Instance;
             for (int i = 0; i < count || count == 0; i++) {
                 Console.WriteLine("Writing sample {0}", i);
 
                 // Optionally, clear the instance field from previous iterations
-                instance.Clear();
-                instance.Set("x", i);
-                instance.Set("y", i * 2);
-                instance.Set("shapesize", 30);
-                instance.Set("color", "BLUE");
+                output.ClearValues();
+                instance.SetValue("x", i);
+                instance.SetValue("y", i * 2);
+                instance.SetValue("y", 3.14);
+                instance.SetValue("shapesize", 30);
+                instance.SetValue("color", "BLUE");
 
-                writer.Write();
+                output.Write();
                 Thread.Sleep(100);
             }
         }
 
         static void Subscribe(Connector connector, int count)
         {
-            string readerName = "MySubscriber::MySquareReader";
-            Reader reader = new Reader(connector, readerName);
+            string inputName = "MySubscriber::MySquareReader";
+            Input input = connector.GetInput(inputName);
 
             for (int i = 0; i < count || count == 0; i++) {
                 // Poll for samples every second
                 Console.WriteLine("Waiting 1 second...");
                 Thread.Sleep(1000);
 
-                // Take samples. Accesible from Reader.Samples
-                reader.Take();
-                Console.WriteLine("Received {0} samples", reader.Samples.Count);
-                foreach (Sample sample in reader.Samples) {
-                    if (sample.IsValid) {
+                // Take samples. Accesible from Input.Samples
+                input.Take();
+                Console.WriteLine("Received {0} samples", input.Samples.Count);
+                foreach (Sample sample in input.Samples) {
+                    if (sample.Info.IsValid) {
                         Console.WriteLine(
                             "Received [x={0}, y={1}, size={2}, color={3}]",
-                             sample.GetInt("x"),
-                             sample.Get<int>("y"),
-                             sample.Get<int>("shapesize"),
-                             sample.GetString("color"));
+                            sample.Data.GetValueInt32("x"),
+                            sample.Data.GetValueInt32("y"),
+                            sample.Data.GetValueInt32("shapesize"),
+                            sample.Data.GetValueString("color"));
                     } else {
                         Console.WriteLine("Received metadata");
                     }

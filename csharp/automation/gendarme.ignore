@@ -17,4 +17,3 @@ T: RTI.Connext.Connector.SampleCollection/SampleEnumerator
 R: Gendarme.Rules.Maintainability.AvoidLackOfCohesionOfMethodsRule
 # It implements many GetValueType methods for convenience
 T: RTI.Connext.Connector.Sample
- 

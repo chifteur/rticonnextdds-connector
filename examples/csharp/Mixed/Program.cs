@@ -1,15 +1,17 @@
-﻿// (c) Copyright, Real-Time Innovations, 2017.
-// All rights reserved.
+﻿// ﻿   (c) 2005-2017 Copyright, Real-Time Innovations, All rights reserved.
 //
-// No duplications, whole or partial, manual or electronic, may be made
-// without express written permission.  Any such copies, or
-// revisions thereof, must display this notice unaltered.
-// This code contains trade secrets of Real-Time Innovations, Inc.
+// RTI grants Licensee a license to use, modify, compile, and create
+// derivative works of the Software.  Licensee has the right to distribute
+// object form only for use with RTI products. The Software is provided
+// "as is", with no warranty of any type, including any warranty for fitness
+// for any purpose. RTI is under no obligation to maintain or support the
+// Software.  RTI shall not be liable for any incidental or consequential
+// damages arising out of the use or inability to use the software.
 namespace Mixed
 {
     using System;
     using System.Threading;
-    using RTI.Connector;
+    using RTI.Connext.Connector;
 
     static class Program
     {
@@ -38,60 +40,60 @@ namespace Mixed
 
         static void Publish(Connector connector, int count)
         {
-            string writerName = "MyPublisher::MySquareWriter";
-            Writer writer = new Writer(connector, writerName);
+            string outputName = "MyPublisher::MySquareWriter";
+            Output output = connector.GetOutput(outputName);
 
-            Instance instance = writer.Instance;
+            Instance instance = output.Instance;
             for (int i = 0; i < count || count == 0; i++) {
                 // Clear all the instance members
-                instance.Clear();
+                output.ClearValues();
 
                 // Sets a number
-                instance.Set("x", i);
+                instance.SetValue("x", i);
 
                 // Sets a string
-                instance.Set("color", "BLUE");
+                instance.SetValue("color", "BLUE");
 
                 // Sets elements of a sequence.
                 // The sequence size is automatically updated (2 or 3).
-                instance.Set("aOctetSeq[1]", 42);
-                instance.Set("aOctetSeq[2]", 43);
+                instance.SetValue("aOctetSeq[1]", 42);
+                instance.SetValue("aOctetSeq[2]", 43);
                 if (i % 2 == 0)
-                    instance.Set("aOctetSeq[3]", 44);
+                    instance.SetValue("aOctetSeq[3]", 44);
 
                 // Sets elements of complex types
-                instance.Set("innerStruct[1].x", i);
-                instance.Set("innerStruct[2].x", i + 1);
+                instance.SetValue("innerStruct[1].x", i);
+                instance.SetValue("innerStruct[2].x", i + 1);
 
                 // Finally write the sample and wait some time
                 Console.WriteLine("Writing sample {0}", i);
-                writer.Write();
+                output.Write();
                 Thread.Sleep(2000);
             }
         }
 
         static void Subscribe(Connector connector, int count)
         {
-            string readerName = "MySubscriber::MySquareReader";
-            Reader reader = new Reader(connector, readerName);
+            string inputName = "MySubscriber::MySquareReader";
+            Input inpout = connector.GetInput(inputName);
 
             for (int i = 0; i < count || count == 0; i++) {
                 // Poll for samples every 2 seconds
                 Console.WriteLine("Waiting 2 seconds...");
                 Thread.Sleep(2000);
 
-                reader.Take();
-                Console.WriteLine("Received {0} samples", reader.Samples.Count);
-                foreach (Sample sample in reader.Samples) {
-                    if (sample.IsValid) {
+                inpout.Take();
+                Console.WriteLine("Received {0} samples", inpout.Samples.Count);
+                foreach (Sample sample in inpout.Samples) {
+                    if (sample.Info.IsValid) {
                         // Gets an integer using generic types
-                        int x = sample.Get<int>("x");
+                        int x = sample.Data.GetValueInt32("x");
 
                         // Gets a string
-                        string color = sample.GetString("color");
+                        string color = sample.Data.GetValueString("color");
 
                         // Gets the size of a sequence
-                        int seqLength = sample.GetInt("aOctetSeq#");
+                        int seqLength = sample.Data.GetValueInt32("aOctetSeq#");
                         Console.WriteLine("I received a sequence with {0} elements",
                                           seqLength);
                     } else {

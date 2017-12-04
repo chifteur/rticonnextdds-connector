@@ -1,17 +1,19 @@
-﻿// (c) Copyright, Real-Time Innovations, 2017.
-// All rights reserved.
+﻿// ﻿   (c) 2005-2017 Copyright, Real-Time Innovations, All rights reserved.
 //
-// No duplications, whole or partial, manual or electronic, may be made
-// without express written permission.  Any such copies, or
-// revisions thereof, must display this notice unaltered.
-// This code contains trade secrets of Real-Time Innovations, Inc.
+// RTI grants Licensee a license to use, modify, compile, and create
+// derivative works of the Software.  Licensee has the right to distribute
+// object form only for use with RTI products. The Software is provided
+// "as is", with no warranty of any type, including any warranty for fitness
+// for any purpose. RTI is under no obligation to maintain or support the
+// Software.  RTI shall not be liable for any incidental or consequential
+// damages arising out of the use or inability to use the software.
 namespace Objects
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
-    using RTI.Connector;
+    using RTI.Connext.Connector;
 
     static class Program
     {
@@ -40,8 +42,8 @@ namespace Objects
 
         static void Publish(Connector connector, int count)
         {
-            string writerName = "MyPublisher::MySquareWriter";
-            Writer writer = new Writer(connector, writerName);
+            string outputName = "MyPublisher::MySquareWriter";
+            Output output = connector.GetOutput(outputName);
 
             for (int i = 0; i < count || count == 0; i++) {
                 // Create the class to send
@@ -67,25 +69,29 @@ namespace Objects
 
                 // Finally write the sample and wait some time
                 Console.WriteLine("Writing sample {0}", i);
-                writer.Write(shape);
+
+                output.ClearValues();
+                output.Instance.SetValuesFrom(shape);
+                output.Write();
+
                 Thread.Sleep(2000);
             }
         }
 
         static void Subscribe(Connector connector, int count)
         {
-            string readerName = "MySubscriber::MySquareReader";
-            Reader reader = new Reader(connector, readerName);
+            string inputName = "MySubscriber::MySquareReader";
+            Input input = connector.GetInput(inputName);
 
             for (int i = 0; i < count || count == 0; i++) {
                 // Wait for upto 2 seconds for samples.
-                if (!connector.WaitForSamples(3000))
+                if (!connector.Wait(3000))
                     continue;
 
-                reader.Take();
-                var sampleList = reader.Samples
-                    .Where(s => s.IsValid)
-                    .Select(s => s.GetAs<Shape>());
+                input.Take();
+                var sampleList = input.Samples
+                    .Where(s => s.Info.IsValid)
+                    .Select(s => s.Data.GetSampleAs<Shape>());
                 foreach (Shape sample in sampleList) {
                     Console.Write($"[x:{sample.X}");
                     Console.Write($",color:{sample.Color}");

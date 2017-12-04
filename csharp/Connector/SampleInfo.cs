@@ -10,35 +10,22 @@
 namespace RTI.Connext.Connector
 {
     /// <summary>
-    /// Sample read with a <see cref="Input"/>.
+    /// Information associated to the sample.
     /// </summary>
-    public class Sample
+    public class SampleInfo
     {
         readonly Interface.Sample internalSample;
 
-        internal Sample(Input input, int index)
+        internal SampleInfo(Interface.Sample internalSample)
         {
-            internalSample = new Interface.Sample(input.InternalInput, index);
-            Info = new SampleInfo(internalSample);
-            Data = new SampleData(internalSample);
+            this.internalSample = internalSample;
         }
 
         /// <summary>
-        /// Gets the sample information.
+        /// Gets a value indicating whether this <see cref="T:Sample"/> contains
+        /// data or just metadata information.
         /// </summary>
-        /// <value>The info.</value>
-        public SampleInfo Info {
-            get;
-            private set;
-         }
-
-        /// <summary>
-        /// Gets the sample data.
-        /// </summary>
-        /// <value>The data.</value>
-        public SampleData Data {
-            get;
-            private set;
-        }
+        /// <value><c>true</c> if contains data; otherwise, <c>false</c>.</value>
+        public bool IsValid => internalSample.GetBoolFromInfo("valid_data");
     }
 }

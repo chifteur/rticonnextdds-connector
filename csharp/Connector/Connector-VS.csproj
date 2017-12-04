@@ -43,9 +43,12 @@
     <Compile Include="Interface\Instance.cs" />
     <Compile Include="Interface\Input.cs" />
     <Compile Include="Interface\Sample.cs" />
+    <Compile Include="Interface\ReturnCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Sample.cs" />
+    <Compile Include="SampleInfo.cs" />
+    <Compile Include="SampleData.cs" />
     <Compile Include="SampleCollection.cs" />
     <Compile Include="Output.cs" />
     <Compile Include="Interface\Output.cs" />

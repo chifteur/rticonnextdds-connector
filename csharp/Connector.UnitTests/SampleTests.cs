@@ -1,10 +1,12 @@
-﻿// (c) Copyright, Real-Time Innovations, 2017.
-// All rights reserved.
+// ﻿   (c) 2005-2017 Copyright, Real-Time Innovations, All rights reserved.
 //
-// No duplications, whole or partial, manual or electronic, may be made
-// without express written permission.  Any such copies, or
-// revisions thereof, must display this notice unaltered.
-// This code contains trade secrets of Real-Time Innovations, Inc.
+// RTI grants Licensee a license to use, modify, compile, and create
+// derivative works of the Software.  Licensee has the right to distribute
+// object form only for use with RTI products. The Software is provided
+// "as is", with no warranty of any type, including any warranty for fitness
+// for any purpose. RTI is under no obligation to maintain or support the
+// Software.  RTI shall not be liable for any incidental or consequential
+// damages arising out of the use or inability to use the software.
 namespace RTI.Connext.Connector.UnitTests
 {
     using System;
@@ -75,7 +77,7 @@ namespace RTI.Connext.Connector.UnitTests
         public void RecievedSampleIsValid()
         {
             SendAndTakeOrReadStandardSample(true);
-            Assert.IsTrue(samples.Single().IsValid);
+            Assert.IsTrue(samples.Single().Info.IsValid);
         }
 
         [Test]
@@ -95,13 +97,13 @@ namespace RTI.Connext.Connector.UnitTests
             input.Take();
             Sample sample = samples.Single();
 
-            Assert.AreEqual(-1453873, sample.GetValueInt32("x"));
-            Assert.AreEqual(0x80, sample.GetValueByte("byte"));
-            Assert.AreEqual(0xCAFE, sample.GetValueUInt16("ushort"));
-            Assert.AreEqual(-20812, sample.GetValueInt16("short"));
-            Assert.AreEqual(0xCAFEBABE, sample.GetValueUInt32("uint"));
-            Assert.That(sample.GetValueFloat("angle"), Is.InRange(-3.140005, -3.140000));
-            Assert.That(sample.GetValueDouble("double"), Is.InRange(-3.140005, -3.140000));
+            Assert.AreEqual(-1453873, sample.Data.GetValueInt32("x"));
+            Assert.AreEqual(0x80, sample.Data.GetValueByte("byte"));
+            Assert.AreEqual(0xCAFE, sample.Data.GetValueUInt16("ushort"));
+            Assert.AreEqual(-20812, sample.Data.GetValueInt16("short"));
+            Assert.AreEqual(0xCAFEBABE, sample.Data.GetValueUInt32("uint"));
+            Assert.That(sample.Data.GetValueFloat("angle"), Is.InRange(-3.140005, -3.140000));
+            Assert.That(sample.Data.GetValueDouble("double"), Is.InRange(-3.140005, -3.140000));
         }
 
         [Test]
@@ -109,7 +111,7 @@ namespace RTI.Connext.Connector.UnitTests
         {
             SendAndTakeOrReadStandardSample(true);
             Sample sample = samples.Single();
-            Assert.AreEqual("BLUE", sample.GetValueString("color"));
+            Assert.AreEqual("BLUE", sample.Data.GetValueString("color"));
         }
 
         [Test]
@@ -117,7 +119,7 @@ namespace RTI.Connext.Connector.UnitTests
         {
             SendAndTakeOrReadStandardSample(true);
             Sample sample = samples.Single();
-            Assert.AreEqual(true, sample.GetValueBool("hidden"));
+            Assert.AreEqual(true, sample.Data.GetValueBool("hidden"));
         }
 
         [Test]
@@ -125,9 +127,9 @@ namespace RTI.Connext.Connector.UnitTests
         {
             SendAndTakeOrReadStandardSample(true);
             Sample sample = samples.Single();
-            Assert.DoesNotThrow(() => sample.GetValueInt32("fakeInt"));
-            Assert.DoesNotThrow(() => sample.GetValueString("fakeString"));
-            Assert.DoesNotThrow(() => sample.GetValueBool("fakeBool"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueInt32("fakeInt"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueString("fakeString"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueBool("fakeBool"));
         }
 
         [Test]
@@ -135,8 +137,8 @@ namespace RTI.Connext.Connector.UnitTests
         {
             SendAndTakeOrReadStandardSample(true);
             Sample sample = samples.Single();
-            Assert.DoesNotThrow(() => sample.GetValueInt32("color"));
-            Assert.DoesNotThrow(() => sample.GetValueInt32("hidden"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueInt32("color"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueInt32("hidden"));
         }
 
         [Test]
@@ -144,10 +146,10 @@ namespace RTI.Connext.Connector.UnitTests
         {
             SendAndTakeOrReadStandardSample(true);
             Sample sample = samples.Single();
-            Assert.DoesNotThrow(() => sample.GetValueString("x"));
-            Assert.DoesNotThrow(() => sample.GetValueString("hidden"));
-            Assert.DoesNotThrow(() => sample.GetValueString("angle"));
-            Assert.DoesNotThrow(() => sample.GetValueString("fillKind"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueString("x"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueString("hidden"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueString("angle"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueString("fillKind"));
         }
 
         [Test]
@@ -155,10 +157,10 @@ namespace RTI.Connext.Connector.UnitTests
         {
             SendAndTakeOrReadStandardSample(true);
             Sample sample = samples.Single();
-            Assert.DoesNotThrow(() => sample.GetValueBool("x"));
-            Assert.DoesNotThrow(() => sample.GetValueBool("color"));
-            Assert.DoesNotThrow(() => sample.GetValueBool("angle"));
-            Assert.DoesNotThrow(() => sample.GetValueBool("fillKind"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueBool("x"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueBool("color"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueBool("angle"));
+            Assert.DoesNotThrow(() => sample.Data.GetValueBool("fillKind"));
         }
 
         [Test]
@@ -177,7 +179,7 @@ namespace RTI.Connext.Connector.UnitTests
             Assert.AreEqual(1, samples.Count);
             input.Read();
             Assert.AreEqual(1, samples.Count);
-            Assert.AreEqual(4, samples.First().GetValueInt32("y"));
+            Assert.AreEqual(4, samples.First().Data.GetValueInt32("y"));
         }
 
         [Test]
@@ -202,7 +204,7 @@ namespace RTI.Connext.Connector.UnitTests
 
             SendAndTakeObjectSample(obj);
             Sample sample = samples.Single();
-            MyClassType received = sample.GetSampleAs<MyClassType>();
+            MyClassType received = sample.Data.GetSampleAs<MyClassType>();
 
             Assert.AreEqual("test", received.Color);
             Assert.AreEqual(3, received.X);
@@ -220,7 +222,7 @@ namespace RTI.Connext.Connector.UnitTests
 
             SendAndTakeObjectSample(obj);
             Sample sample = samples.Single();
-            MyStructType received = sample.GetSampleAs<MyStructType>();
+            MyStructType received = sample.Data.GetSampleAs<MyStructType>();
 
             Assert.AreEqual("test", received.Color);
             Assert.AreEqual(3, received.X);
@@ -238,7 +240,7 @@ namespace RTI.Connext.Connector.UnitTests
 
             SendAndTakeObjectSample(obj);
             Sample sample = samples.Single();
-            MyClassType received = sample.GetSampleAs<MyClassType>();
+            MyClassType received = sample.Data.GetSampleAs<MyClassType>();
 
             Assert.AreEqual("test", received.Color);
             Assert.AreEqual(3, received.X);
@@ -256,7 +258,7 @@ namespace RTI.Connext.Connector.UnitTests
 
             SendAndTakeObjectSample(obj);
             Sample sample = samples.Single();
-            dynamic received = sample.GetSampleAsObject();
+            dynamic received = sample.Data.GetSampleAsObject();
 
             Assert.AreEqual("test", received.color.Value);
             Assert.AreEqual(3, received.x.Value);
@@ -274,7 +276,7 @@ namespace RTI.Connext.Connector.UnitTests
 
             SendAndTakeObjectSample(obj);
             Sample sample = samples.Single();
-            var received = sample.GetSampleAs<Dictionary<string, object>>();
+            var received = sample.Data.GetSampleAs<Dictionary<string, object>>();
 
             Assert.AreEqual("test", received["color"]);
             Assert.AreEqual(3, received["x"]);
@@ -295,7 +297,7 @@ namespace RTI.Connext.Connector.UnitTests
 
             SendAndTakeObjectSample(obj);
             Sample sample = samples.Single();
-            ComplexType received = sample.GetSampleAs<ComplexType>();
+            ComplexType received = sample.Data.GetSampleAs<ComplexType>();
 
             Assert.AreEqual("test", received.Color);
             Assert.AreEqual(3, received.X);
@@ -317,7 +319,7 @@ namespace RTI.Connext.Connector.UnitTests
             SendAndTakeObjectSample(obj);
             Sample sample = samples.Single();
             Assert.Throws<Newtonsoft.Json.JsonSerializationException>(
-                () => sample.GetSampleAs<MyInvalidClassType>());
+                () => sample.Data.GetSampleAs<MyInvalidClassType>());
         }
 
         [Test]
@@ -331,7 +333,7 @@ namespace RTI.Connext.Connector.UnitTests
 
             SendAndTakeObjectSample(obj);
             Sample sample = samples.Single();
-            MyFakeFieldsTypes received = sample.GetSampleAs<MyFakeFieldsTypes>();
+            MyFakeFieldsTypes received = sample.Data.GetSampleAs<MyFakeFieldsTypes>();
 
             Assert.AreEqual("blue", received.Color);
             Assert.AreEqual(3, received.X);
@@ -356,10 +358,10 @@ namespace RTI.Connext.Connector.UnitTests
             Sample sample = samples.Single();
             bool validSample = false;
             connector.Dispose();
-            Assert.Throws<ObjectDisposedException>(() => sample.GetValueInt32("x"));
-            Assert.Throws<ObjectDisposedException>(() => sample.GetValueString("color"));
-            Assert.Throws<ObjectDisposedException>(() => sample.GetValueBool("hidden"));
-            Assert.Throws<ObjectDisposedException>(() => validSample = sample.IsValid);
+            Assert.Throws<ObjectDisposedException>(() => sample.Data.GetValueInt32("x"));
+            Assert.Throws<ObjectDisposedException>(() => sample.Data.GetValueString("color"));
+            Assert.Throws<ObjectDisposedException>(() => sample.Data.GetValueBool("hidden"));
+            Assert.Throws<ObjectDisposedException>(() => validSample = sample.Info.IsValid);
         }
 
         [Test]
@@ -374,7 +376,7 @@ namespace RTI.Connext.Connector.UnitTests
             SendAndTakeObjectSample(obj);
             Sample sample = samples.Single();
             connector.Dispose();
-            Assert.Throws<ObjectDisposedException>(() => sample.GetSampleAs<MyStructType>());
+            Assert.Throws<ObjectDisposedException>(() => sample.Data.GetSampleAs<MyStructType>());
         }
 
         [Test]
@@ -396,11 +398,11 @@ namespace RTI.Connext.Connector.UnitTests
             input.Take();
             Sample sample = samples.Single();
 
-            Assert.AreEqual("test", sample.GetValueString("color"));
-            Assert.AreEqual(5, sample.GetValueInt32("x"));
-            Assert.AreEqual(true, sample.GetValueBool("hidden"));
-            Assert.AreEqual(4, sample.GetValueInt32("y"));
-            Assert.AreEqual(10, sample.GetValueInt32("shapesize"));
+            Assert.AreEqual("test", sample.Data.GetValueString("color"));
+            Assert.AreEqual(5, sample.Data.GetValueInt32("x"));
+            Assert.AreEqual(true, sample.Data.GetValueBool("hidden"));
+            Assert.AreEqual(4, sample.Data.GetValueInt32("y"));
+            Assert.AreEqual(10, sample.Data.GetValueInt32("shapesize"));
         }
 
         [Test]
@@ -422,11 +424,11 @@ namespace RTI.Connext.Connector.UnitTests
             input.Take();
             Sample sample = samples.Single();
 
-            Assert.AreEqual("test", sample.GetValueString("color"));
-            Assert.AreEqual(3, sample.GetValueInt32("x"));
-            Assert.AreEqual(true, sample.GetValueBool("hidden"));
-            Assert.AreEqual(4, sample.GetValueInt32("y"));
-            Assert.AreEqual(10, sample.GetValueInt32("shapesize"));
+            Assert.AreEqual("test", sample.Data.GetValueString("color"));
+            Assert.AreEqual(3, sample.Data.GetValueInt32("x"));
+            Assert.AreEqual(true, sample.Data.GetValueBool("hidden"));
+            Assert.AreEqual(4, sample.Data.GetValueInt32("y"));
+            Assert.AreEqual(10, sample.Data.GetValueInt32("shapesize"));
         }
 
         // This is just for coverage, all IEnumerable<T> implementations
