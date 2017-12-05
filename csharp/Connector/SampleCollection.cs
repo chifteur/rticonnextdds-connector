@@ -9,6 +9,7 @@
 // damages arising out of the use or inability to use the software.
 namespace RTI.Connext.Connector
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -29,6 +30,22 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <value>The number of samples.</value>
         public int Count => input.InternalInput.GetSamplesLength();
+
+        /// <summary>
+        /// Gets a <see cref="Sample"/> at the specified index.
+        /// </summary>
+        /// <param name="index">Sample index.</param>
+        /// <returns>
+        /// Sample at the specified index.
+        /// </returns>
+        public Sample this[int index] {
+            get {
+                if (index < 0 || index >= Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+
+                return new Sample(input, index + 1);
+            }
+        }
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.

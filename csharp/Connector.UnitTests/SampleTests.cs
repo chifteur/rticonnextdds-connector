@@ -73,6 +73,58 @@ namespace RTI.Connext.Connector.UnitTests
             Assert.AreEqual(1, list.Cast<Sample>().Count());
         }
 
+#if NET45
+        [Test, Timeout(1000)]
+        public void SampleIteratorContainTwoSample()
+        {
+            output.Instance.SetValue("x", 0);
+            output.Write();
+            output.Instance.SetValue("x", 1);
+            output.Write();
+
+            do {
+                Thread.Sleep(50);
+                input.Read();
+            } while (input.Samples.Count < 2);
+
+            int count = 0;
+            foreach (var sample in samples) {
+                Assert.AreEqual(count, sample.Data.GetValueInt32("x"));
+                count++;
+            }
+
+            Assert.AreEqual(2, count);
+        }
+
+        [Test, Timeout(1000)]
+        public void SampleIndexersReturnSamples()
+        {
+            output.Instance.SetValue("x", 0);
+            output.Write();
+            output.Instance.SetValue("x", 1);
+            output.Write();
+
+            do {
+                Thread.Sleep(50);
+                input.Read();
+            } while (input.Samples.Count < 2);
+
+            Assert.AreEqual(2, input.Samples.Count);
+            Assert.AreEqual(0, input.Samples[0].Data.GetValueInt32("x"));
+            Assert.AreEqual(1, input.Samples[1].Data.GetValueInt32("x"));
+        }
+#endif
+
+        [Test]
+        public void SampleIndexerThrowExceptionForInvalidIndex()
+        {
+            SendAndTakeOrReadStandardSample(true);
+            Sample sample;
+            Assert.DoesNotThrow(() => sample = input.Samples[0]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => sample = input.Samples[-1]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => sample = input.Samples[1]);
+        }
+
         [Test]
         public void RecievedSampleIsValid()
         {
