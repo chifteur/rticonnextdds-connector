@@ -37,15 +37,6 @@ namespace RTI.Connext.Connector.UnitTests
             Assert.AreEqual(TestResources.OutputName, output.Name);
             Assert.IsNotNull(output.Instance);
             Assert.IsNotNull(output.InternalOutput);
-            Assert.IsFalse(output.Disposed);
-        }
-
-        [Test]
-        public void WriteAfterDisposeThrowsException()
-        {
-            Output output = connector.GetOutput(TestResources.OutputName);
-            output.Dispose();
-            Assert.Throws<ObjectDisposedException>(output.Write);
         }
 
         [Test]
@@ -96,46 +87,11 @@ namespace RTI.Connext.Connector.UnitTests
         }
 
         [Test]
-        public void ClearFieldsAfterDisposeThrowsException()
-        {
-            Output output = connector.GetOutput(TestResources.OutputName);
-            output.Dispose();
-            Assert.Throws<ObjectDisposedException>(output.ClearValues);
-        }
-
-        [Test]
         public void ClearFieldsAfterDisposingConnectorThrowsException()
         {
             Output output = connector.GetOutput(TestResources.OutputName);
             connector.Dispose();
             Assert.Throws<ObjectDisposedException>(output.ClearValues);
-        }
-
-        [Test]
-        public void DisposeChangesProperty()
-        {
-            Output output = connector.GetOutput(TestResources.OutputName);
-            Assert.IsFalse(output.Disposed);
-            output.Dispose();
-            Assert.IsTrue(output.Disposed);
-        }
-
-        [Test]
-        public void DisposeDoesNotDisposeConnector()
-        {
-            Output output = connector.GetOutput(TestResources.OutputName);
-            output.Dispose();
-            Assert.IsTrue(output.Disposed);
-            Assert.IsFalse(connector.Disposed);
-        }
-
-        [Test]
-        public void DisposingTwiceDoesNotThrowException()
-        {
-            Output output = connector.GetOutput(TestResources.OutputName);
-            output.Dispose();
-            Assert.DoesNotThrow(output.Dispose);
-            Assert.IsTrue(output.Disposed);
         }
     }
 }

@@ -12,23 +12,21 @@ namespace RTI.Connext.Connector.Interface
     using System;
     using System.Runtime.InteropServices;
 
-    sealed class Output : IDisposable
+    sealed class Output
     {
-        readonly OutputPtr handle;
-
         public Output(Connector connector, string entityName)
         {
             Connector = connector;
             EntityName = entityName;
-            handle = new OutputPtr(connector, entityName);
-            if (handle.IsInvalid) {
+
+            // We don't use this internal pointer but if it's null the entity
+            // doesn't exist
+            IntPtr handle = NativeMethods.RTIDDSConnector_getWriter(
+                    connector.Handle,
+                    entityName);
+            if (handle == IntPtr.Zero) {
                 throw new COMException("Error getting output");
             }
-        }
-
-        ~Output()
-        {
-            Dispose(false);
         }
 
         public Connector Connector {
@@ -59,19 +57,6 @@ namespace RTI.Connext.Connector.Interface
             NativeMethods.RTIDDSConnector_write(Connector.Handle, EntityName);
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        void Dispose(bool freeManagedResources)
-        {
-            if (freeManagedResources && !handle.IsInvalid) {
-                handle.Dispose();
-            }
-        }
-
         static class NativeMethods
         {
             [DllImport("rtiddsconnector", CharSet = CharSet.Ansi)]
@@ -88,24 +73,6 @@ namespace RTI.Connext.Connector.Interface
             public static extern void RTIDDSConnector_write(
                 Connector.ConnectorPtr connectorHandle,
                 string entityName);
-        }
-
-        sealed class OutputPtr : SafeHandle
-        {
-            public OutputPtr(Connector connector, string entityName)
-                : base(IntPtr.Zero, true)
-            {
-                handle = NativeMethods.RTIDDSConnector_getWriter(
-                    connector.Handle,
-                    entityName);
-            }
-
-            public override bool IsInvalid => handle == IntPtr.Zero;
-
-            protected override bool ReleaseHandle()
-            {
-                return true;
-            }
         }
     }
 }

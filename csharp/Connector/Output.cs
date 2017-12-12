@@ -14,7 +14,7 @@ namespace RTI.Connext.Connector
     /// <summary>
     /// Connector output.
     /// </summary>
-    public class Output : IDisposable
+    public class Output
     {
         readonly Interface.Output output;
 
@@ -48,15 +48,6 @@ namespace RTI.Connext.Connector
             private set;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Output"/> is disposed.
-        /// </summary>
-        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
-        public bool Disposed {
-            get;
-            private set;
-        }
-
         internal Interface.Output InternalOutput {
             get { return output; }
         }
@@ -66,10 +57,6 @@ namespace RTI.Connext.Connector
         /// </summary>
         public void ClearValues()
         {
-            if (Disposed) {
-                throw new ObjectDisposedException(nameof(Output));
-            }
-
             output.Clear();
         }
 
@@ -78,35 +65,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         public void Write()
         {
-            if (Disposed) {
-                throw new ObjectDisposedException(nameof(Output));
-            }
-
             output.Write();
-        }
-
-        /// <summary>
-        /// Releases all resource used by the <see cref="Output"/> object.
-        /// </summary>
-        /// <remarks>
-        /// Calling this method doesn't delete the internal DDS DataWriter.
-        /// </remarks>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool freeManagedResources)
-        {
-            if (Disposed) {
-                return;
-            }
-
-            Disposed = true;
-            if (freeManagedResources) {
-                output.Dispose();
-            }
         }
     }
 }

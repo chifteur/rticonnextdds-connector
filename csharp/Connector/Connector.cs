@@ -133,7 +133,7 @@ namespace RTI.Connext.Connector
                 throw new ArgumentOutOfRangeException(nameof(timeoutMillis));
             }
 
-            return InternalConnector.WaitForSamples(timeoutMillis);
+            return InternalConnector.Wait(timeoutMillis);
         }
 
         /// <summary>

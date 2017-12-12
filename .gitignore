@@ -35,6 +35,7 @@ coverage.xml
 testrunner
 TestResult.xml
 coverage-report
+packages/
 
 # Translations
 *.mo

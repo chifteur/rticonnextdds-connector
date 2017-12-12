@@ -14,7 +14,7 @@ namespace RTI.Connext.Connector
     /// <summary>
     /// Connector input.
     /// </summary>
-    public class Input : IDisposable
+    public class Input
     {
         readonly Interface.Input input;
 
@@ -50,15 +50,6 @@ namespace RTI.Connext.Connector
             private set;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Input"/> is disposed.
-        /// </summary>
-        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
-        public bool Disposed {
-            get;
-            private set;
-        }
-
         internal Interface.Input InternalInput {
             get { return input; }
         }
@@ -72,10 +63,6 @@ namespace RTI.Connext.Connector
         /// </remarks>
         public void Read()
         {
-            if (Disposed) {
-                throw new ObjectDisposedException(nameof(Input));
-            }
-
             input.Read();
         }
 
@@ -88,35 +75,7 @@ namespace RTI.Connext.Connector
         /// </remarks>
         public void Take()
         {
-            if (Disposed) {
-                throw new ObjectDisposedException(nameof(Input));
-            }
-
             input.Take();
-        }
-
-        /// <summary>
-        /// Releases all resource used by the <see cref="Input"/> object.
-        /// </summary>
-        /// <remarks>
-        /// Calling this method doesn't delete the internal DDS DataReader.
-        /// </remarks>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool freeManagedResources)
-        {
-            if (Disposed) {
-                return;
-            }
-
-            Disposed = true;
-            if (freeManagedResources) {
-                input.Dispose();
-            }
         }
     }
 }

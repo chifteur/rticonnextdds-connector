@@ -77,10 +77,10 @@ namespace Simple
                     if (sample.Info.IsValid) {
                         Console.WriteLine(
                             "Received [x={0}, y={1}, size={2}, color={3}]",
-                            sample.Data.GetValueInt32("x"),
-                            sample.Data.GetValueInt32("y"),
-                            sample.Data.GetValueInt32("shapesize"),
-                            sample.Data.GetValueString("color"));
+                            sample.Data.GetInt32Value("x"),
+                            sample.Data.GetInt32Value("y"),
+                            sample.Data.GetInt32Value("shapesize"),
+                            sample.Data.GetStringValue("color"));
                     } else {
                         Console.WriteLine("Received metadata");
                     }

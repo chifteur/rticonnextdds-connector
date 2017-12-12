@@ -12,16 +12,19 @@ namespace RTI.Connext.Connector.Interface
     using System;
     using System.Runtime.InteropServices;
 
-    sealed class Input : IDisposable
+    sealed class Input
     {
-        readonly InputPtr handle;
-
         public Input(Connector connector, string entityName)
         {
             Connector = connector;
             EntityName = entityName;
-            handle = new InputPtr(connector, entityName);
-            if (handle.IsInvalid) {
+
+            // We don't use this internal pointer but if it's null the entity
+            // doesn't exist
+            IntPtr handle = NativeMethods.RTIDDSConnector_getReader(
+                connector.Handle,
+                entityName);
+            if (handle == IntPtr.Zero) {
                 throw new SEHException("Error getting input");
             }
         }
@@ -61,19 +64,6 @@ namespace RTI.Connext.Connector.Interface
             NativeMethods.RTIDDSConnector_take(Connector.Handle, EntityName);
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        void Dispose(bool freeManagedResources)
-        {
-            if (freeManagedResources && !handle.IsInvalid) {
-                handle.Dispose();
-            }
-        }
-
         static class NativeMethods
         {
             [DllImport("rtiddsconnector", CharSet = CharSet.Ansi)]
@@ -95,24 +85,6 @@ namespace RTI.Connext.Connector.Interface
             public static extern double RTIDDSConnector_getSamplesLength(
                 Connector.ConnectorPtr connectorHandle,
                 string entityName);
-        }
-
-        sealed class InputPtr : SafeHandle
-        {
-            public InputPtr(Connector connector, string entityName)
-                : base(IntPtr.Zero, true)
-            {
-                handle = NativeMethods.RTIDDSConnector_getReader(
-                    connector.Handle,
-                    entityName);
-            }
-
-            public override bool IsInvalid => handle == IntPtr.Zero;
-
-            protected override bool ReleaseHandle()
-            {
-                return true;
-            }
         }
     }
 }

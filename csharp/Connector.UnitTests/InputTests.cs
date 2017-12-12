@@ -10,7 +10,6 @@
 namespace RTI.Connext.Connector.UnitTests
 {
     using System;
-    using System.Runtime.InteropServices;
     using NUnit.Framework;
 
     [TestFixture]
@@ -39,45 +38,10 @@ namespace RTI.Connext.Connector.UnitTests
         }
 
         [Test]
-        public void DisposeChangesProperty()
-        {
-            Input input = connector.GetInput(TestResources.InputName);
-            Assert.IsFalse(input.Disposed);
-            input.Dispose();
-            Assert.IsTrue(input.Disposed);
-        }
-
-        [Test]
-        public void DisposeDoesNotDisposeConnector()
-        {
-            Input input = connector.GetInput(TestResources.InputName);
-            input.Dispose();
-            Assert.IsTrue(input.Disposed);
-            Assert.IsFalse(connector.Disposed);
-        }
-
-        [Test]
-        public void DisposingTwiceDoesNotThrowException()
-        {
-            Input input = connector.GetInput(TestResources.InputName);
-            input.Dispose();
-            Assert.DoesNotThrow(input.Dispose);
-            Assert.IsTrue(input.Disposed);
-        }
-
-        [Test]
         public void ReadDoesNotThrowException()
         {
             Input input = connector.GetInput(TestResources.InputName);
             Assert.DoesNotThrow(input.Read);
-        }
-
-        [Test]
-        public void ReadAfterDisposeThrowsException()
-        {
-            Input input = connector.GetInput(TestResources.InputName);
-            input.Dispose();
-            Assert.Throws<ObjectDisposedException>(input.Read);
         }
 
         [Test]
@@ -93,14 +57,6 @@ namespace RTI.Connext.Connector.UnitTests
         {
             Input input = connector.GetInput(TestResources.InputName);
             Assert.DoesNotThrow(input.Take);
-        }
-
-        [Test]
-        public void TakeAfterDisposeThrowsException()
-        {
-            Input input = connector.GetInput(TestResources.InputName);
-            input.Dispose();
-            Assert.Throws<ObjectDisposedException>(input.Take);
         }
 
         [Test]

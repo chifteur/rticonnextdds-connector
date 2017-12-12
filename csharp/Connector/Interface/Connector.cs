@@ -37,13 +37,13 @@ namespace RTI.Connext.Connector.Interface
             private set;
         }
 
-        public bool WaitForSamples(int timeoutMillis)
+        public bool Wait(int timeoutMillis)
         {
             ReturnCode retcode = (ReturnCode)NativeMethods.RTIDDSConnector_wait(
                 Handle,
                 timeoutMillis);
             if (retcode != ReturnCode.Ok && retcode != ReturnCode.Timeout) {
-                throw new SEHException("Invalid retcode: " + retcode.ToString());
+                throw new SEHException("Wait faiulre. Retcode: " + retcode.ToString());
             }
 
             return retcode != ReturnCode.Timeout;

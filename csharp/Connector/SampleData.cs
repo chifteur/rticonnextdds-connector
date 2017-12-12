@@ -29,7 +29,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
-        public double GetValueDouble(string field)
+        public double GetDoubleValue(string field)
         {
             return internalSample.GetNumberFromSample(field);
         }
@@ -39,7 +39,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
-        public float GetValueFloat(string field)
+        public float GetFloatValue(string field)
         {
             return (float)internalSample.GetNumberFromSample(field);
         }
@@ -49,7 +49,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
-        public byte GetValueByte(string field)
+        public byte GetByteValue(string field)
         {
             return (byte)internalSample.GetNumberFromSample(field);
         }
@@ -59,7 +59,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
-        public short GetValueInt16(string field)
+        public short GetInt16Value(string field)
         {
             return (short)internalSample.GetNumberFromSample(field);
         }
@@ -70,7 +70,7 @@ namespace RTI.Connext.Connector
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
         [CLSCompliant(false)]
-        public ushort GetValueUInt16(string field)
+        public ushort GetUInt16Value(string field)
         {
             return (ushort)internalSample.GetNumberFromSample(field);
         }
@@ -80,7 +80,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
-        public int GetValueInt32(string field)
+        public int GetInt32Value(string field)
         {
             return (int)internalSample.GetNumberFromSample(field);
         }
@@ -91,7 +91,7 @@ namespace RTI.Connext.Connector
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
         [CLSCompliant(false)]
-        public uint GetValueUInt32(string field)
+        public uint GetUInt32Value(string field)
         {
             return (uint)internalSample.GetNumberFromSample(field);
         }
@@ -101,7 +101,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
-        public bool GetValueBool(string field)
+        public bool GetBoolValue(string field)
         {
             return internalSample.GetBoolFromSample(field);
         }
@@ -111,7 +111,7 @@ namespace RTI.Connext.Connector
         /// </summary>
         /// <returns>The field value.</returns>
         /// <param name="field">Field name.</param>
-        public string GetValueString(string field)
+        public string GetStringValue(string field)
         {
             return internalSample.GetStringFromSample(field);
         }

@@ -87,13 +87,13 @@ namespace Mixed
                 foreach (Sample sample in inpout.Samples) {
                     if (sample.Info.IsValid) {
                         // Gets an integer using generic types
-                        int x = sample.Data.GetValueInt32("x");
+                        int x = sample.Data.GetInt32Value("x");
 
                         // Gets a string
-                        string color = sample.Data.GetValueString("color");
+                        string color = sample.Data.GetStringValue("color");
 
                         // Gets the size of a sequence
-                        int seqLength = sample.Data.GetValueInt32("aOctetSeq#");
+                        int seqLength = sample.Data.GetInt32Value("aOctetSeq#");
                         Console.WriteLine("I received a sequence with {0} elements",
                                           seqLength);
                     } else {
